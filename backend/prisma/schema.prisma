@@ -19,29 +19,20 @@ model User {
   id        String   @id @default(cuid())
   username      String?
   email     String?  @unique
+  password String
   posts     Post[]
-  password Password? 
-  passwordId Int
-}
-
-model Password {
-  id Int @id @default(autoincrement())
-  hash String
-  userId String @unique
-  user User @relation(fields: [userId],references: [id])
 }
 
 model Post {
   id        Int   @id @default(autoincrement())
-  title     String?
+  title     String
   description   String?
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  String?
-  likes Int
-  link  String
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  String
+  likes Int @default(0)
+  link  String?
   imageUrl  String
   tags  Tag[] @relation("PostTag")
-  tagId Int 
   createdAt DateTime @default(now())
 }
 
@@ -49,5 +40,4 @@ model Tag {
   id Int @id @default(autoincrement())
   name String
   posts Post[] @relation("PostTag")
-  postId Int
 }
