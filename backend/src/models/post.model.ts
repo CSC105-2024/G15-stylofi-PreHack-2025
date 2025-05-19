@@ -6,6 +6,16 @@ const getPost = async (id: number) => {
   return post;
 };
 
+const getAllPosts = async () => {
+  const posts = await db.post.findMany({});
+  return posts;
+};
+
+const getAllPostsByUser = async (userId: string) => {
+  const posts = await db.post.findMany({ where: { authorId: userId } });
+  return posts;
+};
+
 const createPost = async (data: CreatePostInput) => {
   const post = await db.post.create({
     data: {
@@ -46,4 +56,4 @@ const updatePost = async (
   return post;
 };
 
-export { getPost, createPost, updatePost };
+export { getPost, getAllPosts, getAllPostsByUser, createPost, updatePost };
