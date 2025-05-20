@@ -26,12 +26,7 @@ const createPost = async (c: Context) => {
 
   const authorId = c.get("userId");
 
-  if (
-    !body.title ||
-    !authorId ||
-    !body.imageUrl ||
-    !Array.isArray(body.tagIds)
-  ) {
+  if (!body.title || !body.imageUrl || !Array.isArray(body.tagIds)) {
     return c.json({ error: "Missing required fields" }, 400);
   }
 
