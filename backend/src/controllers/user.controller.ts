@@ -3,6 +3,7 @@ import * as userModel from "../models/user.model.ts";
 import type { CreateUserBody } from "../types/index.ts";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { getCookie, setCookie } from "hono/cookie";
 
 const createUser = async (c: Context) => {
   try {
@@ -82,7 +83,9 @@ const loginUser = async (c: Context) => {
 
     console.log(token);
 
-    c.header("Set-Cookie", `token=${token}; Path=/; HttpOnly; Secure`);
+    // c.header("Set-Cookie", `token=${token}; Path=/; HttpOnly; Secure`);
+    c.header("Set-Cookie", `g15-cookie=${token}; Path=/; HttpOnly`);
+    const cookie = getCookie(c, "g15-cookie");
 
     return c.json({ success: true, msg: "Login Successful" });
   } catch (e) {
