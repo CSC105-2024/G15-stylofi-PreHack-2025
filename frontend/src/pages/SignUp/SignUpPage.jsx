@@ -16,6 +16,7 @@ const SignUpPage = () => {
 
   const signupSchema = z
     .object({
+      username: z.string().min(3, "Username must be at least 3 characters"),
       email: z.string().email("Invalid email address"),
       password: z
         .string()
@@ -37,6 +38,7 @@ const SignUpPage = () => {
     setLoading(true);
     try {
       const res = await api.post(`/auth/signup`, {
+        username: data.username,
         email: data.email,
         password: data.password,
       });
@@ -68,6 +70,17 @@ const SignUpPage = () => {
         className="space-y-4 flex flex-col justify-center items-center"
         onSubmit={handleSubmit(onSubmit)}
       >
+        <Input
+          {...register("username")}
+          type="text"
+          name="username"
+          placeholder="Username"
+          className="bg-input-background/80 w-80 h-12 border-0 rounded-xl ring-primary"
+        />
+        {errors.username && (
+          <p className="text-red-500 text-sm">{errors.username.message}</p>
+        )}
+
         <Input
           {...register("email")}
           type="email"
