@@ -29,7 +29,7 @@ const SignInPage = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const res = await api.post(`/auth/login`, {
+      const res = await api.post(`/auth/signin`, {
         email: data.email,
         password: data.password,
       });
