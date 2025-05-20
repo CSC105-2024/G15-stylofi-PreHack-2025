@@ -50,10 +50,4 @@ const findByUsername = async (username: string) => {
   return account;
 };
 
-
-export {
-  findByEmail,
-  createUser,
-  updateUser,
-  findByUsername,
-};
+export { findByEmail, createUser, updateUser, findByUsername };

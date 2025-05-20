@@ -2,6 +2,7 @@ import type { Context } from "hono";
 import * as userModel from "../models/user.model.ts";
 import type { CreateUserBody } from "../types/index.ts";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const createUser = async (c: Context) => {
   try {
@@ -13,7 +14,7 @@ const createUser = async (c: Context) => {
           data: null,
           msg: "Missing required fields",
         },
-        400,
+        400
       );
     }
     const user = await userModel.findByEmail(email);
@@ -39,7 +40,7 @@ const createUser = async (c: Context) => {
         data: null,
         msg: `${e}`,
       },
-      500,
+      500
     );
   }
 };
@@ -55,7 +56,7 @@ const loginUser = async (c: Context) => {
           data: null,
           msg: "Email doesn't exist",
         },
-        401,
+        401
       );
     }
 
@@ -67,9 +68,21 @@ const loginUser = async (c: Context) => {
           data: null,
           msg: "Invalid credentials",
         },
-        401,
+        401
       );
     }
+
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        userEmail: user.email,
+      },
+      process.env.JWT_SECRET_KEY!
+    );
+
+    console.log(token);
+
+    c.header("Set-Cookie", `token=${token}; Path=/; HttpOnly; Secure`);
 
     return c.json({ success: true, msg: "Login Successful" });
   } catch (e) {
@@ -79,7 +92,7 @@ const loginUser = async (c: Context) => {
         data: null,
         msg: `${e}`,
       },
-      500,
+      500
     );
   }
 };
