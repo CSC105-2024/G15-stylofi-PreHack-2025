@@ -11,9 +11,9 @@ const createUser = async (c: Context) => {
         {
           success: false,
           data: null,
-          msg: "missing requiredField",
+          msg: "Missing required fields",
         },
-        400
+        400,
       );
     }
     const user = await userModel.findByEmail(email);
@@ -39,7 +39,7 @@ const createUser = async (c: Context) => {
         data: null,
         msg: `${e}`,
       },
-      500
+      500,
     );
   }
 };
@@ -55,7 +55,7 @@ const loginUser = async (c: Context) => {
           data: null,
           msg: "Email doesn't exist",
         },
-        401
+        401,
       );
     }
 
@@ -67,7 +67,7 @@ const loginUser = async (c: Context) => {
           data: null,
           msg: "Invalid credentials",
         },
-        401
+        401,
       );
     }
 
@@ -79,7 +79,7 @@ const loginUser = async (c: Context) => {
         data: null,
         msg: `${e}`,
       },
-      500
+      500,
     );
   }
 };
