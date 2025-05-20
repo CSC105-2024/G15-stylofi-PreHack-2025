@@ -8,10 +8,15 @@ const findByEmail = async (email: string) => {
   return mail;
 };
 
-const createUser = async (email: string, password: string) => {
+const createUser = async (
+  username: string,
+  email: string,
+  password: string,
+) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await db.user.create({
     data: {
+      username: username,
       email: email,
       password: hashedPassword,
     },

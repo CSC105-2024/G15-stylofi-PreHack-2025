@@ -7,8 +7,9 @@ export interface CreatePostInput {
   imageUrl: string;
   tagIds: number[];
 }
-export interface CreateUserBody  {
+export interface CreateUserBody {
+  username: string;
   email: string;
   password: string;
-  name: string;
-};
+}
+

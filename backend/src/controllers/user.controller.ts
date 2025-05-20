@@ -5,8 +5,8 @@ import bcrypt from "bcryptjs";
 
 const createUser = async (c: Context) => {
   try {
-    const { email, password } = await c.req.json<CreateUserBody>();
-    if (!email || !password) {
+    const { username, email, password } = await c.req.json<CreateUserBody>();
+    if (!username || !email || !password) {
       return c.json(
         {
           success: false,
@@ -25,7 +25,7 @@ const createUser = async (c: Context) => {
       });
     }
 
-    const newUser = await userModel.createUser(email, password);
+    const newUser = await userModel.createUser(username, email, password);
     const { password: _, ...safeUser } = newUser;
     return c.json({
       success: true,
