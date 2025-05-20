@@ -3,7 +3,6 @@ import * as userModel from "../models/user.model.ts";
 import type { CreateUserBody } from "../types/index.ts";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { getCookie, setCookie } from "hono/cookie";
 
 const createUser = async (c: Context) => {
   try {
@@ -15,7 +14,7 @@ const createUser = async (c: Context) => {
           data: null,
           msg: "Missing required fields",
         },
-        400
+        400,
       );
     }
     const user = await userModel.findByEmail(email);
@@ -41,7 +40,7 @@ const createUser = async (c: Context) => {
         data: null,
         msg: `${e}`,
       },
-      500
+      500,
     );
   }
 };
@@ -57,7 +56,7 @@ const loginUser = async (c: Context) => {
           data: null,
           msg: "Email doesn't exist",
         },
-        401
+        401,
       );
     }
 
@@ -69,7 +68,7 @@ const loginUser = async (c: Context) => {
           data: null,
           msg: "Invalid credentials",
         },
-        401
+        401,
       );
     }
 
@@ -78,14 +77,10 @@ const loginUser = async (c: Context) => {
         userId: user.id,
         userEmail: user.email,
       },
-      process.env.JWT_SECRET_KEY!
+      process.env.JWT_SECRET_KEY!,
     );
 
-    console.log(token);
-
-    // c.header("Set-Cookie", `token=${token}; Path=/; HttpOnly; Secure`);
-    c.header("Set-Cookie", `g15-cookie=${token}; Path=/; HttpOnly`);
-    const cookie = getCookie(c, "g15-cookie");
+    c.header("Set-Cookie", `token=${token}; Path=/; HttpOnly`);
 
     return c.json({ success: true, msg: "Login Successful" });
   } catch (e) {
@@ -95,7 +90,7 @@ const loginUser = async (c: Context) => {
         data: null,
         msg: `${e}`,
       },
-      500
+      500,
     );
   }
 };

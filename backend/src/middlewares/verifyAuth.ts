@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 export const verifyAuth = async (c: Context, next: Next) => {
   try {
     const cookie = getCookie(c)["token"];
-    console.log(cookie);
     if (!cookie) {
       throw new Error("No cookie found");
     }
@@ -25,7 +24,7 @@ export const verifyAuth = async (c: Context, next: Next) => {
         data: null,
         msg: `${e}`,
       },
-      401
+      401,
     );
   }
 };
