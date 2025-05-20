@@ -11,12 +11,12 @@ import { verifyAuth } from "../middlewares/verifyAuth.ts";
 
 const postRouter = new Hono();
 
-postRouter.use("", verifyAuth);
+postRouter.use(verifyAuth);
 
+postRouter.get("/user", getAllPostsByUser);
 postRouter.get("/", getAllPosts);
 postRouter.get("/:id", getPost);
-postRouter.get("/user", getAllPostsByUser);
-postRouter.post("/", createPost);
+postRouter.post("/create", createPost);
 postRouter.put("/:id", updatePost);
 postRouter.delete("/:id", deletePost);
 
