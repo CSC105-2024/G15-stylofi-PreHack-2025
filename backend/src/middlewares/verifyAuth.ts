@@ -1,21 +1,28 @@
 import { type Context, type Next } from "hono";
-import { getCookie } from "hono/cookie";
+import { getSignedCookie } from "hono/cookie";
 import jwt from "jsonwebtoken";
 
 export const verifyAuth = async (c: Context, next: Next) => {
   try {
-    const cookie = getCookie(c)["token"];
-    if (!cookie) {
-      throw new Error("No cookie found");
-    }
+    const cookie = await getSignedCookie(
+      c,
+      process.env.SECRET_COOKIE!,
+      "token"
+    );
+    console.log(cookie);
 
-    const decoded = jwt.verify(cookie, process.env.JWT_SECRET_KEY!) as {
+    if (typeof cookie !== "string") throw new Error("Invalid or missing token");
+
+    const { userId, userEmail } = jwt.verify(
+      cookie,
+      process.env.JWT_SECRET_KEY!
+    ) as {
       userId: string;
       userEmail: string;
     };
 
-    c.set("userId", decoded.userId);
-    c.set("userEmail", decoded.userEmail);
+    c.set("userId", userId);
+    c.set("userEmail", userEmail);
     await next();
   } catch (e) {
     return c.json(
@@ -24,7 +31,7 @@ export const verifyAuth = async (c: Context, next: Next) => {
         data: null,
         msg: `${e}`,
       },
-      401,
+      401
     );
   }
 };

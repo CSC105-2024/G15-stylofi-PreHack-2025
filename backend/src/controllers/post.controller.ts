@@ -15,7 +15,7 @@ const getAllPosts = async (c: Context) => {
 };
 
 const getAllPostsByUser = async (c: Context) => {
-  const userId = c.req.param("userId");
+  const userId = c.get("userId");
   if (!userId) return c.json({ error: "Invalid ID", success: false }, 400);
   const posts = await PostModel.getAllPostsByUser(userId);
   return c.json(posts);
@@ -24,7 +24,7 @@ const getAllPostsByUser = async (c: Context) => {
 const createPost = async (c: Context) => {
   const body = await c.req.json();
 
-  const authorId = "cmauumrf10000t0bueadq9wlu";
+  const authorId = c.get("userId");
 
   if (
     !body.title ||
@@ -60,4 +60,38 @@ const updatePost = async (c: Context) => {
   }
 };
 
-export { getPost, getAllPosts, getAllPostsByUser, createPost, updatePost };
+const deletePost = async (c: Context) => {
+  const id = Number(c.req.param("id"));
+  const userId = c.get("userId");
+
+  try {
+    const deletedPost = await PostModel.deletePost(id, userId);
+
+    return c.json(
+      {
+        success: true,
+        data: deletedPost,
+        msg: `successful`,
+      },
+      200
+    );
+  } catch (e) {
+    return c.json(
+      {
+        success: false,
+        data: null,
+        msg: `${(e as Error).message}`,
+      },
+      404
+    );
+  }
+};
+
+export {
+  getPost,
+  getAllPosts,
+  getAllPostsByUser,
+  createPost,
+  updatePost,
+  deletePost,
+};

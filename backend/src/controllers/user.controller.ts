@@ -3,6 +3,7 @@ import * as userModel from "../models/user.model.ts";
 import type { CreateUserBody } from "../types/index.ts";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { setSignedCookie } from "hono/cookie";
 
 const createUser = async (c: Context) => {
   try {
@@ -14,15 +15,25 @@ const createUser = async (c: Context) => {
           data: null,
           msg: "Missing required fields",
         },
-        400,
+        400
       );
     }
-    const user = await userModel.findByEmail(email);
-    if (user) {
+
+    const userByEmail = await userModel.findByEmail(email);
+    if (userByEmail) {
       return c.json({
         success: false,
         data: null,
         msg: "Email already exists",
+      });
+    }
+
+    const userByName = await userModel.findByUsername(email);
+    if (userByName) {
+      return c.json({
+        success: false,
+        data: null,
+        msg: "Username already exists",
       });
     }
 
@@ -40,7 +51,7 @@ const createUser = async (c: Context) => {
         data: null,
         msg: `${e}`,
       },
-      500,
+      500
     );
   }
 };
@@ -56,7 +67,7 @@ const loginUser = async (c: Context) => {
           data: null,
           msg: "Email doesn't exist",
         },
-        401,
+        401
       );
     }
 
@@ -68,7 +79,7 @@ const loginUser = async (c: Context) => {
           data: null,
           msg: "Invalid credentials",
         },
-        401,
+        401
       );
     }
 
@@ -77,10 +88,10 @@ const loginUser = async (c: Context) => {
         userId: user.id,
         userEmail: user.email,
       },
-      process.env.JWT_SECRET_KEY!,
+      process.env.JWT_SECRET_KEY!
     );
 
-    c.header("Set-Cookie", `token=${token}; Path=/; HttpOnly`);
+    await setSignedCookie(c, "token", token, process.env.SECRET_COOKIE!);
 
     return c.json({ success: true, msg: "Login Successful" });
   } catch (e) {
@@ -90,7 +101,7 @@ const loginUser = async (c: Context) => {
         data: null,
         msg: `${e}`,
       },
-      500,
+      500
     );
   }
 };

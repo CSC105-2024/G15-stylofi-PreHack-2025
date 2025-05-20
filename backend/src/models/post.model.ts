@@ -31,7 +31,6 @@ const createPost = async (data: CreatePostInput) => {
     },
     include: {
       tags: true,
-      author: true,
     },
   });
   return post;
@@ -56,4 +55,17 @@ const updatePost = async (
   return post;
 };
 
-export { getPost, getAllPosts, getAllPostsByUser, createPost, updatePost };
+const deletePost = async (id: number, authorId: string) => {
+  const post = await db.post.delete({ where: { id, authorId: authorId } });
+
+  return post;
+};
+
+export {
+  getPost,
+  getAllPosts,
+  getAllPostsByUser,
+  createPost,
+  updatePost,
+  deletePost,
+};
