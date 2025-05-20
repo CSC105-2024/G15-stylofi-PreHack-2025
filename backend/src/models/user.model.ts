@@ -1,3 +1,4 @@
+import { compare } from "bcrypt";
 import db from "../lib/db.js";
 import bcrypt from "bcryptjs";
 
@@ -11,7 +12,7 @@ const findByEmail = async (email: string) => {
 const createUser = async (
   username: string,
   email: string,
-  password: string,
+  password: string
 ) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await db.user.create({
@@ -27,7 +28,7 @@ const createUser = async (
 const updateUser = async (
   userId: string,
   userName: string,
-  password: string,
+  password: string
 ) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -42,4 +43,17 @@ const updateUser = async (
   return updatedUser;
 };
 
-export { findByEmail, createUser, updateUser };
+const findByUsername = async (username: string) => {
+  const account = await db.user.findUnique({
+    where: { username },
+  });
+  return account;
+};
+
+
+export {
+  findByEmail,
+  createUser,
+  updateUser,
+  findByUsername,
+};
