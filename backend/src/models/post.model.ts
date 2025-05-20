@@ -38,7 +38,7 @@ const createPost = async (data: CreatePostInput) => {
 
 const updatePost = async (
   id: number,
-  data: { title?: string; description?: string }
+  data: { title?: string; description?: string },
 ) => {
   const post = await db.post.update({
     where: { id },

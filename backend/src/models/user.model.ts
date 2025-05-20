@@ -9,6 +9,17 @@ const findByEmail = async (email: string) => {
   return mail;
 };
 
+const findByUsername = async (username: string) => {
+  const account = await db.user.findUnique({
+    where: { username },
+  });
+  return account;
+};
+
+const validatePassword = async (input: string, hash: string) => {
+  return compare(input, hash);
+};
+
 const createUser = async (
   username: string,
   email: string,
@@ -43,11 +54,10 @@ const updateUser = async (
   return updatedUser;
 };
 
-const findByUsername = async (username: string) => {
-  const account = await db.user.findUnique({
-    where: { username },
-  });
-  return account;
+export {
+  findByEmail,
+  validatePassword,
+  createUser,
+  updateUser,
+  findByUsername,
 };
-
-export { findByEmail, createUser, updateUser, findByUsername };
