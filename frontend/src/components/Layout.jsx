@@ -5,17 +5,15 @@ import { Outlet } from "react-router-dom";
 const Layout = () => {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
-        <AppSidebar />
-        <MainContent />
-      </div>
+      <AppSidebar />
+      <MainContent />
     </SidebarProvider>
   );
 };
 
 const MainContent = () => (
   <main className="flex-1 gap-6 transition-all duration-300">
-    <div className="p-4 overflow-y-auto h-screen">
+    <div className="overflow-y-auto h-screen">
       <Outlet />
     </div>
   </main>
