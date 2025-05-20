@@ -1,21 +1,17 @@
 import type { Context } from "hono";
 import * as userModel from "../models/user.model.ts";
 import type { CreateUserBody } from "../types/index.ts";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { setSignedCookie } from "hono/cookie";
+import { generateToken } from "../utils/token.ts";
 
 const createUser = async (c: Context) => {
   try {
     const { username, email, password } = await c.req.json<CreateUserBody>();
+
     if (!username || !email || !password) {
       return c.json(
-        {
-          success: false,
-          data: null,
-          msg: "Missing required fields",
-        },
-        400
+        { success: false, data: null, msg: "Missing required fields" },
+        400,
       );
     }
 
@@ -28,7 +24,7 @@ const createUser = async (c: Context) => {
       });
     }
 
-    const userByName = await userModel.findByUsername(email);
+    const userByName = await userModel.findByUsername(username);
     if (userByName) {
       return c.json({
         success: false,
@@ -39,20 +35,19 @@ const createUser = async (c: Context) => {
 
     const newUser = await userModel.createUser(username, email, password);
     const { password: _, ...safeUser } = newUser;
-    return c.json({
-      success: true,
-      data: safeUser,
-      msg: "Created new user!",
+
+    const token = generateToken(safeUser);
+
+    await setSignedCookie(c, "token", token, process.env.SECRET_COOKIE!, {
+      httpOnly: true,
+      secure: true,
+      path: "/",
+      maxAge: 60 * 15,
     });
+
+    return c.json({ success: true, msg: "Created new user!" }, 201);
   } catch (e) {
-    return c.json(
-      {
-        success: false,
-        data: null,
-        msg: `${e}`,
-      },
-      500
-    );
+    return c.json({ success: false, data: null, msg: `${e}` }, 500);
   }
 };
 
@@ -60,49 +55,34 @@ const loginUser = async (c: Context) => {
   try {
     const { email, password } = await c.req.json();
     const user = await userModel.findByEmail(email);
+
     if (!user) {
       return c.json(
-        {
-          success: false,
-          data: null,
-          msg: "Email doesn't exist",
-        },
-        401
+        { success: false, data: null, msg: "Email doesn't exist" },
+        401,
       );
     }
 
-    const checkPassword = await bcrypt.compare(password, user.password);
-    if (!checkPassword) {
+    const isValid = await userModel.validatePassword(password, user.password);
+    if (!isValid) {
       return c.json(
-        {
-          success: false,
-          data: null,
-          msg: "Invalid credentials",
-        },
-        401
+        { success: false, data: null, msg: "Invalid credentials" },
+        401,
       );
     }
 
-    const token = jwt.sign(
-      {
-        userId: user.id,
-        userEmail: user.email,
-      },
-      process.env.JWT_SECRET_KEY!
-    );
+    const token = generateToken(user);
 
-    await setSignedCookie(c, "token", token, process.env.SECRET_COOKIE!);
+    await setSignedCookie(c, "token", token, process.env.SECRET_COOKIE!, {
+      httpOnly: true,
+      secure: true,
+      path: "/",
+      maxAge: 60 * 15,
+    });
 
-    return c.json({ success: true, msg: "Login Successful" });
+    return c.json({ success: true, msg: "Login successful" });
   } catch (e) {
-    return c.json(
-      {
-        success: false,
-        data: null,
-        msg: `${e}`,
-      },
-      500
-    );
+    return c.json({ success: false, data: null, msg: `${e}` }, 500);
   }
 };
 

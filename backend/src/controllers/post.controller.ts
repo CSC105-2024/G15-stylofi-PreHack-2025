@@ -73,7 +73,7 @@ const deletePost = async (c: Context) => {
         data: deletedPost,
         msg: `successful`,
       },
-      200
+      200,
     );
   } catch (e) {
     return c.json(
@@ -82,7 +82,7 @@ const deletePost = async (c: Context) => {
         data: null,
         msg: `${(e as Error).message}`,
       },
-      404
+      404,
     );
   }
 };
