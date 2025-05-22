@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: "http://localhost:5173", // or your frontend URL
     credentials: true,
-  })
+  }),
 );
 
 app.route("", mainRouter);
@@ -27,5 +27,5 @@ serve(
   },
   (info) => {
     console.log(`Server is running on http://localhost:${info.port}`);
-  }
+  },
 );
