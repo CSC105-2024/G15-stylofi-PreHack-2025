@@ -45,7 +45,7 @@ const createUser = async (c: Context) => {
   }
 };
 
-const loginUser = async (c: Context) => {
+const signInUser = async (c: Context) => {
   try {
     const { email, password } = await c.req.json();
     const user = await userModel.findByEmail(email);
@@ -66,15 +66,19 @@ const loginUser = async (c: Context) => {
     }
 
     const { password: _, ...safeUser } = user;
-    await issueTokens(c, safeUser);
+    const token = await issueTokens(c, safeUser);
 
-    return c.json({ success: true, msg: "Login successful" });
+    return c.json({
+      success: true,
+      msg: "Login successful",
+      token: token.accessToken,
+    });
   } catch (e) {
     return c.json({ success: false, data: null, msg: `${e}` }, 500);
   }
 };
 
-const logoutUser = async (c: Context) => {
+const signOutUser = async (c: Context) => {
   deleteCookie(c, "token");
   deleteCookie(c, "refresh_token");
 
@@ -110,4 +114,4 @@ const refreshToken = async (c: Context) => {
   }
 };
 
-export { createUser, loginUser, logoutUser, refreshToken };
+export { createUser, signInUser, signOutUser, refreshToken };
