@@ -1,51 +1,62 @@
-import { Progress } from "@/components/ui/progress";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useDataContext } from "@/hooks/useDataContext";
 import { useFetch } from "@/hooks/useFetch";
-import { useEffect, useState } from "react";
-
-const images = [
-  "/images/sample-1.jpg",
-  "/images/sample-2.jpg",
-  "/images/sample-3.jpg",
-  "/images/sample-4.jpg",
-  "/images/sample-5.jpg",
-  "/images/sample-6.jpg",
-  "/images/sample-7.jpg",
-  "/images/sample-8.jpg",
-  "/images/sample-9.jpg",
-];
 
 const MasonryGrid = () => {
   const { fetchPosts } = useFetch();
   const { data, setData } = useDataContext();
-  const [progress, setProgress] = useState(13);
+  const [loadedImages, setLoadedImages] = useState({});
 
   useEffect(() => {
-    const timer = setTimeout(() => setProgress(80), 250);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const setPosts = async () => {
-      const posts = await fetchPosts();
-      setData(posts);
+    const fetchAndSetPosts = async () => {
+      try {
+        const posts = await fetchPosts();
+        setData(posts);
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      }
     };
-    setPosts();
-  }, []);
+    fetchAndSetPosts();
+  }, [setData]);
 
-  if (!data) return <Progress value={progress} />;
+  const handleImageLoad = (id) => {
+    setLoadedImages((prev) => ({ ...prev, [id]: true }));
+  };
 
   return (
     <div className="columns-1 sm:columns-2 lg:columns-4 gap-2 space-y-2 p-4">
-      {data.map((post, i) => (
-        <div className="break-inside-avoid" key={post.id ?? i}>
-          <img
-            src={post.imageUrl}
-            alt={post.title}
-            className="object-cover rounded-xl w-full"
-          />
-        </div>
-      ))}
+      <AnimatePresence>
+        {data?.map((post, i) => {
+          const isLoaded = loadedImages[post.id];
+          return (
+            <motion.div
+              key={post.id ?? i}
+              className="break-inside-avoid"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: i * 0.05 }}
+              layout
+            >
+              <div className="relative overflow-hidden rounded-xl min-h-[200px]">
+                {!isLoaded && (
+                  <div className="absolute inset-0 bg-gray-200 dark:bg-gray-800 animate-pulse rounded-xl z-0" />
+                )}
+
+                <img
+                  src={post.imageUrl}
+                  alt={post.title}
+                  className={`relative w-full object-cover transition-opacity duration-500 z-10 ${
+                    isLoaded ? "opacity-100" : "opacity-0"
+                  }`}
+                  loading="lazy"
+                  onLoad={() => handleImageLoad(post.id)}
+                />
+              </div>
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
     </div>
   );
 };
