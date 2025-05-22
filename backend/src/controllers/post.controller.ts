@@ -1,5 +1,6 @@
 import type { Context } from "hono";
 import * as PostModel from "../models/post.model.ts";
+import { cloudinary } from "../utils/cloudinary.ts";
 
 const getPost = async (c: Context) => {
   const id = Number(c.req.param("id"));
@@ -22,19 +23,45 @@ const getAllPostsByUser = async (c: Context) => {
 };
 
 const createPost = async (c: Context) => {
-  const body = await c.req.json();
+  const formData = await c.req.formData();
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const link = formData.get("link") as string;
+  const image = formData.get("image") as File;
 
-  const authorId = c.get("userId");
-
-  if (!body.title || !body.imageUrl || !Array.isArray(body.tagIds)) {
-    return c.json({ error: "Missing required fields" }, 400);
+  if (!image || !title || !description || !link) {
+    return c.json({ success: false, msg: "Missing required fields" }, 400);
   }
 
   try {
-    const post = await PostModel.createPost({ ...body, authorId });
+    const buffer = await image.arrayBuffer();
+    const base64Image = Buffer.from(buffer).toString("base64");
+    const dataUri = `data:${image.type};base64,${base64Image}`;
+
+    const uploaded = await cloudinary.uploader.upload(dataUri, {
+      folder: "stylofi",
+      // categorization: "google_tagging",
+      // auto_tagging: 0.7,
+    });
+
+    const authorId = c.get("userId");
+    const imageUrl = uploaded.secure_url;
+
+    const labels = c.get("imageLabels") as string[];
+
+    const tagIds = await PostModel.getOrCreateTagIds(labels);
+
+    const post = await PostModel.createPost({
+      title,
+      description,
+      link,
+      imageUrl,
+      tagIds,
+      authorId,
+    });
+
     return c.json(post, 201);
   } catch (err) {
-    console.error(err);
     return c.json({ error: "Failed to create post" }, 500);
   }
 };
@@ -82,6 +109,10 @@ const deletePost = async (c: Context) => {
   }
 };
 
+const returnValidated = async (c: Context) => {
+  return c.json({ success: true, msg: "Image is fasion-related" });
+};
+
 export {
   getPost,
   getAllPosts,
@@ -89,4 +120,5 @@ export {
   createPost,
   updatePost,
   deletePost,
+  returnValidated,
 };
