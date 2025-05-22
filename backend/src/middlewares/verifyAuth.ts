@@ -1,39 +1,50 @@
 import { type Context, type Next } from "hono";
-import { getSignedCookie } from "hono/cookie";
-import { verifyAccessToken } from "../utils/token.ts";
+import { setSignedCookie } from "hono/cookie";
+import { generateAccessToken, generateRefreshToken } from "../utils/token.ts";
+import { getAuthState } from "../utils/auth.ts";
 
-export const verifyAuth = async (c: Context, next: Next) => {
+const verifyAuth = async (c: Context, next: Next) => {
   const secret = process.env.JWT_SECRET_KEY!;
+  const cookieSecret = process.env.SECRET_COOKIE!;
 
-  try {
-    const cookie = await getSignedCookie(c, secret, "token");
+  const authState = await getAuthState(c);
 
-    if (typeof cookie !== "string") {
-      throw new Error("Invalid or missing token");
-    }
-
-    const payload = verifyAccessToken(cookie);
-
-    if (
-      !payload ||
-      typeof payload !== "object" ||
-      !payload.id ||
-      !payload.email
-    ) {
-      throw new Error("Token verification failed");
-    }
-
-    c.set("userId", payload.id);
-    c.set("userEmail", payload.email);
-    await next();
-  } catch (e) {
-    return c.json(
-      {
-        success: false,
-        data: null,
-        msg: `Unauthorized: ${e instanceof Error ? e.message : String(e)}`,
-      },
-      401,
-    );
+  if (!authState.isValid) {
+    return c.json({ error: "Unauthorized" }, 401);
   }
+
+  if (authState.needsNewTokens) {
+    const newAccessToken = generateAccessToken({
+      id: authState.userId,
+      email: authState.userEmail,
+    });
+
+    const newRefreshToken = generateRefreshToken({
+      id: authState.userId,
+      email: authState.userEmail,
+    });
+
+    await Promise.all([
+      setSignedCookie(c, "token", newAccessToken, secret, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict" as const,
+        path: "/",
+        maxAge: 15 * 60,
+      }),
+      setSignedCookie(c, "refresh_token", newRefreshToken, cookieSecret, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict" as const,
+        path: "/",
+        maxAge: 7 * 24 * 60 * 60,
+      }),
+    ]);
+  }
+
+  c.set("userId", authState.userId);
+  c.set("userEmail", authState.userEmail);
+  await next();
 };
+
+export { verifyAuth };
