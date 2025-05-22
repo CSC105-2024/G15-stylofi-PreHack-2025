@@ -7,10 +7,12 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@google-cloud/vision": "^5.1.0",
     "@hono/node-server": "^1.14.1",
     "@prisma/client": "^6.8.2",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.6.1",
     "dotenv": "^16.5.0",
     "hono": "^4.7.10",
     "jsonwebtoken": "^9.0.2"
