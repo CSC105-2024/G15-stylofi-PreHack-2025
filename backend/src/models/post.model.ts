@@ -22,7 +22,6 @@ const createPost = async (data: CreatePostInput) => {
       title: data.title,
       description: data.description,
       authorId: data.authorId,
-      likes: data.likes,
       link: data.link,
       imageUrl: data.imageUrl,
       tags: {
@@ -34,6 +33,20 @@ const createPost = async (data: CreatePostInput) => {
     },
   });
   return post;
+};
+
+const getOrCreateTagIds = async (labels: string[]) => {
+  const tagIds = await Promise.all(
+    labels.map(async (label) => {
+      const tag = await db.tag.upsert({
+        where: { name: label },
+        update: {},
+        create: { name: label },
+      });
+      return tag.id;
+    }),
+  );
+  return tagIds;
 };
 
 const updatePost = async (
@@ -68,4 +81,5 @@ export {
   createPost,
   updatePost,
   deletePost,
+  getOrCreateTagIds,
 };
