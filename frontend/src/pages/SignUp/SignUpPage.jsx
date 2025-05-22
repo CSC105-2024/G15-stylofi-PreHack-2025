@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import api from "@/services/api";
 import PasswordInput from "@/components/PasswordInput";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -34,6 +34,22 @@ const SignUpPage = () => {
     formState: { errors },
   } = useForm({ resolver: zodResolver(signupSchema) });
 
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     try {
+  //       const { data } = await api.get("/auth/check");
+  //
+  //       if (data.authenticated) {
+  //         navigate("/dashboard");
+  //       }
+  //     } catch (error) {
+  //       console.error("Auth check failed", error);
+  //     }
+  //   };
+  //
+  //   checkAuth();
+  // }, [navigate]);
+
   const onSubmit = async (data) => {
     setLoading(true);
     try {
@@ -46,7 +62,9 @@ const SignUpPage = () => {
       if (res.data.success) {
         setTimeout(() => {
           toast.success("Account created successfully!");
-          navigate("/signin");
+          setTimeout(() => {
+            navigate("/signin");
+          }, 750);
         }, 750);
       } else {
         setTimeout(() => {
@@ -60,7 +78,7 @@ const SignUpPage = () => {
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 750);
+      }, 1500);
     }
   };
 

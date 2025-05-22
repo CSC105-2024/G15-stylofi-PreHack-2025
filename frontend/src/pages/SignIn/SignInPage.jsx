@@ -9,6 +9,7 @@ import api from "@/services/api";
 import PasswordInput from "@/components/PasswordInput";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { storeAuthToken } from "@/services/auth";
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -34,9 +35,15 @@ const SignInPage = () => {
         password: data.password,
       });
       if (res.data.success) {
+        if (res.data.token) {
+          storeAuthToken(res.data.token);
+        }
+
         setTimeout(() => {
           toast.success("Login Successful");
-          navigate("/dashboard");
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 750);
         }, 750);
       } else {
         setTimeout(() => {
@@ -50,7 +57,7 @@ const SignInPage = () => {
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 750);
+      }, 1500);
     }
   };
 
