@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { ImagePlus } from "lucide-react";
 import api from "@/services/api";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Progress } from "@/components/ui/progress";
+import FormField from "@/components/FormField";
+import UploadButton from "@/components/UploadButton";
+import StatusMessage from "@/components/StatusMessage";
 
 const UploadForm = () => {
   const navigate = useNavigate();
@@ -16,9 +16,9 @@ const UploadForm = () => {
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [image, setImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
 
   const [validated, setValidated] = useState(null);
-
   const [status, setStatus] = useState("idle");
   const [message, setMessage] = useState("");
   const [progress, setProgress] = useState(0);
@@ -57,7 +57,6 @@ const UploadForm = () => {
     try {
       const res = await api.post("/posts/validate-image", formData);
       const result = { file: imageFile, isValid: true, data: res.data };
-
       setStatus("success");
       setValidated(result);
       return true;
@@ -74,11 +73,9 @@ const UploadForm = () => {
 
     const isValid =
       validated?.file === image ? validated.isValid : await handleImage(image);
-
     if (!isValid) return;
 
     setProgress(0);
-
     simulateUploadSteps();
 
     const formData = new FormData();
@@ -89,119 +86,98 @@ const UploadForm = () => {
 
     try {
       await api.post("/posts/create", formData);
-      setMessage("Upload sucessful.");
+      setMessage("Upload successful.");
       setStatus("success");
       setProgress(100);
       toast.success("Navigating to Dashboard...");
-
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 2500);
+      setTimeout(() => navigate("/dashboard"), 2500);
     } catch (e) {
       setStatus("error");
       setTimeout(() => {
         setMessage(e.response?.data?.msg || "Server error");
-        // toast.error(e.response?.data?.msg || "Server error");
       }, 750);
     }
   };
 
+  const handleImageSelect = (e) => {
+    const file = e.target.files?.[0];
+    setImage(file);
+    if (file) {
+      setPreviewUrl(URL.createObjectURL(file));
+    } else {
+      setPreviewUrl("");
+    }
+  };
+
   return (
-    // TODO: update UI (well, maybe UX also)
-    <div className="max-w-xl mx-auto mt-10 p-6">
-      <Card>
-        <CardContent className="space-y-4 pt-6">
-          <h2 className="text-2xl font-semibold">Upload Fashion Image</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="bg-input-background/80 w-80 h-12 border-0 rounded-xl ring-primary"
-                required
-              />
+    <div className="flex justify-center items-center mt-12">
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-8 rounded-3xl shadow-md"
+      >
+        <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-2xl h-[360px] overflow-hidden relative">
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              alt="Preview"
+              className="object-cover w-full h-full rounded-2xl"
+            />
+          ) : (
+            <div className="flex flex-col items-center text-center text-gray-500">
+              <ImagePlus size={48} />
+              <p className="mt-4 text-sm">Upload a fashion-related image</p>
             </div>
+          )}
+          <Input
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={handleImageSelect}
+            className="absolute w-full h-full inset-0 opacity-0 cursor-pointer"
+            required
+          />
+        </div>
 
-            <div>
-              <Label htmlFor="description">Description</Label>
-              <Input
-                id="description"
-                type="text"
-                placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="bg-input-background/80 w-80 h-12 border-0 rounded-xl ring-primary"
-                required
-              />
-            </div>
+        <div className="space-y-6">
+          <FormField
+            id="title"
+            label="Title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title"
+          />
 
-            <div>
-              <Label htmlFor="link">External Link</Label>
-              <Input
-                id="link"
-                type="url"
-                placeholder="https://example.com"
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
-                className="bg-input-background/80 w-80 h-12 border-0 rounded-xl ring-primary"
-                required
-              />
-            </div>
+          <FormField
+            id="description"
+            label="Description"
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Description"
+          />
 
-            <div>
-              <Label htmlFor="image">Image</Label>
-              <Input
-                id="image"
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImage(e.target.files?.[0] || null)}
-                required
-              />
-            </div>
+          <FormField
+            id="link"
+            label="External Link"
+            type="url"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            placeholder="https://example.com"
+          />
 
-            <Button
-              type="submit"
-              disabled={status === "checking" || status === "success"}
-              className="w-full text-white"
-            >
-              {status === "checking" ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="animate-spin" size={18} /> Uploading...
-                </div>
-              ) : status === "success" ? (
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={18} />
-                </div>
-              ) : (
-                "Upload"
-              )}
-            </Button>
-
-            {message && (
-              <div
-                className={`flex items-center gap-2 text-sm font-medium mt-2 ${
-                  status === "success"
-                    ? "text-green-600"
-                    : status === "error"
-                      ? "text-red-600"
-                      : "text-gray-600"
-                }`}
-              >
-                {status === "success" ? <CheckCircle2 size={18} /> : null}
-                {status === "error" ? <XCircle size={18} /> : null}
-                <span>{message}</span>
-              </div>
-            )}
+          <div>
+            <UploadButton status={status} />
+            <StatusMessage status={status} message={message} />
             {status === "success" && (
-              <Progress value={progress} className="h-2 rounded bg-muted" />
+              <Progress
+                value={progress}
+                className="mt-3 h-2 rounded bg-muted"
+              />
             )}
-          </form>
-        </CardContent>
-      </Card>
+          </div>
+        </div>
+      </form>
     </div>
   );
 };
