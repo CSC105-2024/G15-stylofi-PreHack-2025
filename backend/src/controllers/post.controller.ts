@@ -29,7 +29,11 @@ const createPost = async (c: Context) => {
   const link = formData.get("link") as string;
   const image = formData.get("image") as File;
 
-  if (!image || !title || !description || !link) {
+  if (!(image instanceof File)) {
+    return c.json({ error: "Image is not a valid file upload" }, 400);
+  }
+
+  if (!title || !description || !link) {
     return c.json({ success: false, msg: "Missing required fields" }, 400);
   }
 
@@ -45,9 +49,12 @@ const createPost = async (c: Context) => {
     });
 
     const authorId = c.get("userId");
-    const imageUrl = uploaded.secure_url;
+    if (!authorId) return c.json({ error: "Unauthorized" }, 401);
 
     const labels = c.get("imageLabels") as string[];
+    if (!labels) return c.json({ error: "Image labels missing" }, 400);
+
+    const imageUrl = uploaded.secure_url;
 
     const tagIds = await PostModel.getOrCreateTagIds(labels);
 
