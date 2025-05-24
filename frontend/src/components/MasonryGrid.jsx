@@ -38,7 +38,7 @@ const MasonryGrid = () => {
               transition={{ duration: 0.4, delay: i * 0.05 }}
               layout
             >
-              <div className="relative overflow-hidden rounded-xl min-h-[200px]">
+              <div className="relative overflow-hidden rounded-xl shadow-xl">
                 {!isLoaded && (
                   <div className="absolute inset-0 bg-gray-200 dark:bg-gray-800 animate-pulse rounded-xl z-0" />
                 )}
