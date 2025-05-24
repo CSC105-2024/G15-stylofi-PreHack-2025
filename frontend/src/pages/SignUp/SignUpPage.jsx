@@ -32,7 +32,10 @@ const SignUpPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(signupSchema) });
+  } = useForm({
+    resolver: zodResolver(signupSchema),
+    mode: "onChange",
+  });
 
   // useEffect(() => {
   //   const checkAuth = async () => {

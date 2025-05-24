@@ -16,7 +16,7 @@ const SignInPage = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const schema = z.object({
+  const signInSchema = z.object({
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
   });
@@ -25,7 +25,10 @@ const SignInPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(schema) });
+  } = useForm({
+    resolver: zodResolver(signInSchema),
+    mode: "onChange",
+  });
 
   const onSubmit = async (data) => {
     setLoading(true);
