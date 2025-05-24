@@ -19,17 +19,17 @@ const MasonryGrid = () => {
     fetchAndSetPosts();
   }, [setData]);
 
-  const getBlurredUrl = (originalUrl) => {
-    return originalUrl.replace("/upload/", "/upload/e_blur:2000,q_1,w_20/");
-  };
+  // trying to "reference" pinterest single color progressive loading style (totally referencing, not stealing)
+  const getLowQualityUrl = (originalUrl) =>
+    originalUrl.replace("/upload/", "/upload/w_1,q_10/");
 
-  // TODO: maybe display this in dashboard and only when clicking, show actual quality image, dunno
-  const getOptimizedUrl = (originalUrl) => {
-    return originalUrl.replace("/upload/", "/upload/w_1000/q_auto/f_auto/");
-  };
+  const getProgressiveUrl = (originalUrl) =>
+    originalUrl.replace("/upload/", "/upload/fl_progressive,q_auto/");
 
   const handleImageLoad = (id) => {
-    setLoadedImages((prev) => ({ ...prev, [id]: true }));
+    setTimeout(() => {
+      setLoadedImages((prev) => ({ ...prev, [id]: true }));
+    }, 2500); // can change timeout, maybe it's a bit much rn
   };
 
   const handleImageError = (id) => {
@@ -41,33 +41,35 @@ const MasonryGrid = () => {
       {data?.map((post) => {
         const isLoaded = loadedImages[post.id];
         const failedToLoad = isLoaded === false;
-        const blurredUrl = getBlurredUrl(post.imageUrl);
-        const optimizedUrl = getOptimizedUrl(post.imageUrl);
+        const lowResUrl = getLowQualityUrl(post.imageUrl);
+        const progressiveUrl = getProgressiveUrl(post.imageUrl);
 
         return (
           <div key={post.id} className="mb-4 break-inside-avoid">
-            <div className="relative rounded-xl overflow-hidden shadow-lg">
-              <img
-                src={blurredUrl}
-                alt={failedToLoad ? "" : "Blurred"}
-                className="absolute inset-0 w-full h-full object-cover filter blur-md scale-110 animate-pulse z-0"
-              />
-
+            <div className="relative rounded-xl overflow-hidden shadow-lg bg-background">
               {failedToLoad ? (
-                <div className="bg-red-100 text-red-500 text-center p-10 rounded-xl">
+                <div className="bg-red-100 text-warning text-center p-10 rounded-xl z-20">
                   Failed to load image
                 </div>
               ) : (
-                <img
-                  src={optimizedUrl}
-                  alt={post.title}
-                  className={`relative w-full h-auto object-cover transition-opacity duration-500 z-10 ${
-                    isLoaded ? "opacity-100" : "opacity-0"
-                  }`}
-                  loading="lazy"
-                  onLoad={() => handleImageLoad(post.id)}
-                  onError={() => handleImageError(post.id)}
-                />
+                <>
+                  <img
+                    src={lowResUrl}
+                    alt={post.title}
+                    className="absolute inset-0 w-full h-full object-cover blur-md animate-pulse scale-105 transition-opacity duration-500"
+                  />
+
+                  <img
+                    src={progressiveUrl}
+                    alt={post.title}
+                    className={`relative w-full h-auto object-cover transition-opacity duration-700 ${
+                      isLoaded ? "opacity-100" : "opacity-0"
+                    }`}
+                    loading="lazy"
+                    onLoad={() => handleImageLoad(post.id)}
+                    onError={() => handleImageError(post.id)}
+                  />
+                </>
               )}
             </div>
           </div>
