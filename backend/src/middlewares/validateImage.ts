@@ -1,7 +1,12 @@
 import { type Context, type Next } from "hono";
 import { ImageAnnotatorClient } from "@google-cloud/vision";
 
-const client = new ImageAnnotatorClient();
+const keyString = Buffer.from(process.env.GOOGLE_CLOUD_KEY!, "base64").toString(
+  "utf-8",
+);
+const credentials = JSON.parse(keyString);
+
+const client = new ImageAnnotatorClient({ credentials });
 
 const validateImage = async (c: Context, next: Next) => {
   const formData = await c.req.formData();
