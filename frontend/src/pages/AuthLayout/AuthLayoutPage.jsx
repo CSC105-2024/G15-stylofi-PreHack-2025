@@ -3,7 +3,7 @@ import WallpaperGrid from "@/components/WallpaperGrid";
 import Logo from "@/components/Logo";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 const AuthLayout = () => {
   const location = useLocation();
