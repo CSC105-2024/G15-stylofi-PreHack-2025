@@ -4,6 +4,7 @@ import type { CreateUserBody } from "../types/index.ts";
 import { issueTokens } from "../utils/auth.ts";
 import { deleteCookie, getSignedCookie } from "hono/cookie";
 import { verifyRefreshToken } from "../utils/token.ts";
+import { sendOtp } from "../utils/otp.ts";
 
 const createUser = async (c: Context) => {
   try {
@@ -34,14 +35,53 @@ const createUser = async (c: Context) => {
       });
     }
 
-    const newUser = await userModel.createUser(username, email, password);
-    const { password: _, ...safeUser } = newUser;
+    await userModel.createUser(username, email, password);
 
-    await issueTokens(c, safeUser);
+    const otp = await userModel.createOtp(email);
+    await sendOtp(email, otp);
 
-    return c.json({ success: true, msg: "Created new user!" }, 201);
+    return c.json({ success: true, msg: "OTP sent!" }, 201);
   } catch (e) {
-    return c.json({ success: false, data: null, msg: `${e}` }, 500);
+    return c.json({ success: false, msg: `${e}` }, 500);
+  }
+};
+
+const verifyOtp = async (c: Context) => {
+  try {
+    const { email, otp } = await c.req.json();
+    if (!email || !otp) {
+      return c.json({ success: false, msg: "Email and OTP are required" }, 400);
+    }
+
+    await userModel.verifyOtp(email, otp);
+    return c.json({ success: true, msg: "OTP verified" });
+  } catch (e) {
+    return c.json({ success: false, msg: `${e}` }, 400);
+  }
+};
+
+const resendOtp = async (c: Context) => {
+  try {
+    const { email } = await c.req.json();
+    if (!email) {
+      return c.json({ success: false, msg: "Email is required" }, 400);
+    }
+
+    const user = await userModel.findByEmail(email);
+    if (!user) {
+      return c.json({ success: false, msg: "User not found" }, 404);
+    }
+
+    if (user.otpVerified) {
+      return c.json({ success: false, msg: "User already verified" }, 400);
+    }
+
+    const otp = await userModel.resendOtp(email);
+    await sendOtp(email, otp);
+
+    return c.json({ success: true, msg: "OTP resent" });
+  } catch (e) {
+    return c.json({ success: false, msg: `${e}` }, 500);
   }
 };
 
@@ -63,6 +103,10 @@ const signInUser = async (c: Context) => {
         { success: false, data: null, msg: "Invalid credentials" },
         401,
       );
+    }
+
+    if (!user.otpVerified) {
+      return c.json({ success: false, msg: "Please verify OTP first." }, 403);
     }
 
     const { password: _, ...safeUser } = user;
@@ -114,4 +158,11 @@ const refreshToken = async (c: Context) => {
   }
 };
 
-export { createUser, signInUser, signOutUser, refreshToken };
+export {
+  createUser,
+  signInUser,
+  signOutUser,
+  refreshToken,
+  verifyOtp,
+  resendOtp,
+};
