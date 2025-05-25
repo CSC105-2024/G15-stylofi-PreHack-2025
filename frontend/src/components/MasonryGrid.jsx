@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useDataContext } from "@/hooks/useDataContext";
-import { useFetch } from "@/hooks/useFetch";
+import { useEffect, useState } from 'react';
+import { useDataContext } from '@/hooks/useDataContext';
+import { useFetch } from '@/hooks/useFetch';
 
 const MasonryGrid = () => {
   const { fetchPosts } = useFetch();
@@ -13,18 +13,17 @@ const MasonryGrid = () => {
         const posts = await fetchPosts();
         setData(posts);
       } catch (error) {
-        console.error("Failed to fetch posts:", error);
+        console.error('Failed to fetch posts:', error);
       }
     };
     fetchAndSetPosts();
   }, [setData]);
 
   // trying to "reference" pinterest single color progressive loading style (totally referencing, not stealing)
-  const getLowQualityUrl = (originalUrl) =>
-    originalUrl.replace("/upload/", "/upload/w_1,q_10/");
+  const getLowQualityUrl = (originalUrl) => originalUrl.replace('/upload/', '/upload/w_1,q_10/');
 
   const getProgressiveUrl = (originalUrl) =>
-    originalUrl.replace("/upload/", "/upload/fl_progressive,q_auto/");
+    originalUrl.replace('/upload/', '/upload/fl_progressive,q_auto/');
 
   const handleImageLoad = (id) => {
     setTimeout(() => {
@@ -63,7 +62,7 @@ const MasonryGrid = () => {
                     src={progressiveUrl}
                     alt={post.title}
                     className={`relative w-full h-auto object-cover transition-opacity duration-700 ${
-                      isLoaded ? "opacity-100" : "opacity-0"
+                      isLoaded ? 'opacity-100' : 'opacity-0'
                     }`}
                     loading="lazy"
                     onLoad={() => handleImageLoad(post.id)}

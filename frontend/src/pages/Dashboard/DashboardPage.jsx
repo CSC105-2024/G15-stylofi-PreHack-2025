@@ -1,5 +1,5 @@
-import MasonryGrid from "@/components/MasonryGrid";
-import SearchInput from "@/components/SearchInput";
+import MasonryGrid from '@/components/MasonryGrid';
+import SearchInput from '@/components/SearchInput';
 
 const DashboardPage = () => {
   return (

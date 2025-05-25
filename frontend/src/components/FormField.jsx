@@ -1,15 +1,7 @@
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
-const FormField = ({
-  id,
-  label,
-  type,
-  value,
-  onChange,
-  required = true,
-  placeholder,
-}) => (
+const FormField = ({ id, label, type, value, onChange, required = true, placeholder }) => (
   <>
     <Label htmlFor={id}>{label}</Label>
     <Input

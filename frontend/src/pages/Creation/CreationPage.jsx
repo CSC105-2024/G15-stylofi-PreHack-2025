@@ -1,44 +1,44 @@
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { ImagePlus } from "lucide-react";
-import api from "@/services/api";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import { Progress } from "@/components/ui/progress";
-import FormField from "@/components/FormField";
-import UploadButton from "@/components/UploadButton";
-import StatusMessage from "@/components/StatusMessage";
+import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { ImagePlus } from 'lucide-react';
+import api from '@/services/api';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { Progress } from '@/components/ui/progress';
+import FormField from '@/components/FormField';
+import UploadButton from '@/components/UploadButton';
+import StatusMessage from '@/components/StatusMessage';
 
 const UploadForm = () => {
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [link, setLink] = useState("");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [link, setLink] = useState('');
   const [image, setImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [previewUrl, setPreviewUrl] = useState('');
 
   const [validated, setValidated] = useState(null);
-  const [status, setStatus] = useState("idle");
-  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState('idle');
+  const [message, setMessage] = useState('');
   const [progress, setProgress] = useState(0);
 
   const simulateUploadSteps = () => {
-    setMessage("The image is fashion-related!");
+    setMessage('The image is fashion-related!');
     setProgress(20);
 
     setTimeout(() => {
-      setMessage("📤 Uploading to server...");
+      setMessage('📤 Uploading to server...');
       setProgress(60);
     }, 800);
 
     setTimeout(() => {
-      setMessage("💾 Saving to database...");
+      setMessage('💾 Saving to database...');
       setProgress(85);
     }, 2500);
 
     setTimeout(() => {
-      setMessage("✨ Finalizing upload...");
+      setMessage('✨ Finalizing upload...');
       setProgress(95);
     }, 3200);
   };
@@ -49,21 +49,21 @@ const UploadForm = () => {
     }
 
     const formData = new FormData();
-    formData.append("image", imageFile);
+    formData.append('image', imageFile);
 
-    setStatus("checking");
-    setMessage("Initializing AI Analysis Engine...");
+    setStatus('checking');
+    setMessage('Initializing AI Analysis Engine...');
 
     try {
-      const { data } = await api.post("/posts/validate-image", formData);
+      const { data } = await api.post('/posts/validate-image', formData);
       const result = { file: imageFile, isValid: true, data: data };
-      setStatus("success");
+      setStatus('success');
       setValidated(result);
       return true;
     } catch (e) {
       setValidated({ file: imageFile, isValid: false });
-      setStatus("error");
-      setMessage(e.response?.data?.msg || "Server error");
+      setStatus('error');
+      setMessage(e.response?.data?.msg || 'Server error');
       return false;
     }
   };
@@ -71,30 +71,29 @@ const UploadForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const isValid =
-      validated?.file === image ? validated.isValid : await handleImage(image);
+    const isValid = validated?.file === image ? validated.isValid : await handleImage(image);
     if (!isValid) return;
 
     setProgress(0);
     simulateUploadSteps();
 
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("link", link);
-    formData.append("image", image);
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('link', link);
+    formData.append('image', image);
 
     try {
-      await api.post("/posts/create", formData);
-      setMessage("Upload successful.");
-      setStatus("success");
+      await api.post('/posts/create', formData);
+      setMessage('Upload successful.');
+      setStatus('success');
       setProgress(100);
-      toast.success("Navigating to Dashboard...");
-      setTimeout(() => navigate("/dashboard"), 2500);
+      toast.success('Navigating to Dashboard...');
+      setTimeout(() => navigate('/dashboard'), 2500);
     } catch (e) {
-      setStatus("error");
+      setStatus('error');
       setTimeout(() => {
-        setMessage(e.response?.data?.msg || "Server error");
+        setMessage(e.response?.data?.msg || 'Server error');
       }, 750);
     }
   };
@@ -105,7 +104,7 @@ const UploadForm = () => {
     if (file) {
       setPreviewUrl(URL.createObjectURL(file));
     } else {
-      setPreviewUrl("");
+      setPreviewUrl('');
     }
   };
 
@@ -169,11 +168,8 @@ const UploadForm = () => {
           <div>
             <UploadButton status={status} />
             <StatusMessage status={status} message={message} />
-            {status === "success" && (
-              <Progress
-                value={progress}
-                className="mt-3 h-2 rounded bg-muted"
-              />
+            {status === 'success' && (
+              <Progress value={progress} className="mt-3 h-2 rounded bg-muted" />
             )}
           </div>
         </div>
