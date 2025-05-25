@@ -17,6 +17,7 @@ import CreationPage from "./pages/Creation/CreationPage";
 import { DataContextProvider } from "./contexts/DataContext";
 import { protectedRouteLoader, publicRouteLoader } from "./services/auth";
 import { Loader2 } from "lucide-react";
+import VerifyOtpPage from "./pages/VerifyOTP/VerifyOtpPage";
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "signin",
         element: <SignInPage />,
+      },
+      {
+        path: "verify-otp",
+        element: <VerifyOtpPage />,
       },
     ],
   },
@@ -79,5 +84,5 @@ createRoot(document.getElementById("root")).render(
         hydrationData={{}}
       />
     </DataContextProvider>
-  </StrictMode>,
+  </StrictMode>
 );
