@@ -14,5 +14,15 @@ export const useFetch = () => {
     }
   };
 
-  return { fetchPosts, fetchError, setFetchError };
+  const fetchUserPosts = async () => {
+    try {
+      const res = await api.get('/posts/user');
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      setFetchError(e.response.data.message);
+    }
+  };
+
+  return { fetchPosts, fetchUserPosts, fetchError, setFetchError };
 };
