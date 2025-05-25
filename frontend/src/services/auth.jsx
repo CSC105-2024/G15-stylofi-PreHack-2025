@@ -44,10 +44,10 @@ export const protectedRouteLoader = async () => {
   return null;
 };
 
-export const clearAuthData = () => {
+export const clearAuthData = async () => {
   localStorage.removeItem('authTimestamp');
 
-  api.post('/auth/signout').catch(() => {});
+  await api.post('/auth/signout').catch(() => {});
 };
 
 export const storeAuthToken = (token) => {

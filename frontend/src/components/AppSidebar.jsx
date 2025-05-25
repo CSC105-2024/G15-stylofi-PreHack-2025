@@ -13,7 +13,7 @@ const AppSidebar = () => {
 
   const handleLogout = async () => {
     try {
-      clearAuthData();
+      await clearAuthData();
       toast.success('Successfully signed out');
       navigate('/signin');
     } catch (error) {
