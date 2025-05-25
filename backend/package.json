@@ -11,7 +11,6 @@
     "@hono/node-server": "^1.14.1",
     "@prisma/client": "^6.8.2",
     "bcrypt": "^6.0.0",
-    "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.1",
     "dotenv": "^16.5.0",
     "hono": "^4.7.10",
@@ -23,6 +22,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20.11.17",
     "@types/nodemailer": "^6.4.17",
+    "bcryptjs": "^3.0.2",
     "prisma": "^6.8.2",
     "tsx": "^4.7.1",
     "typescript": "^5.8.3"
