@@ -123,7 +123,7 @@ const UploadForm = () => {
               className="object-cover w-full h-full rounded-2xl"
             />
           ) : (
-            <div className="flex flex-col items-center text-center text-gray-500">
+            <div className="flex flex-col mx-12 items-center text-center text-gray-500">
               <ImagePlus size={48} />
               <p className="mt-4 text-sm">Upload a fashion-related image</p>
             </div>
