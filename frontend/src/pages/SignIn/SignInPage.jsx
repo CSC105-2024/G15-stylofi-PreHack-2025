@@ -54,6 +54,10 @@ const SignInPage = () => {
         }, 750);
       }
     } catch (err) {
+      if (err.response?.data?.msg.includes("OTP")) {
+        navigate("/verify-otp", { state: { email: data.email } });
+      }
+
       setTimeout(() => {
         toast.error(err.response?.data?.msg || "Server error");
       }, 750);
@@ -79,14 +83,12 @@ const SignInPage = () => {
         {errors.email && (
           <p className="text-red-500 text-sm">{errors.email.message}</p>
         )}
-
         <PasswordInput
           register={register}
           name="password"
           error={errors.password}
           placeholder="Password"
         />
-
         <Button
           type="submit"
           disabled={loading}

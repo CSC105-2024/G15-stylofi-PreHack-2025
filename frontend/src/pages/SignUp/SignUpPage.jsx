@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import api from "@/services/api";
 import PasswordInput from "@/components/PasswordInput";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -63,11 +63,11 @@ const SignUpPage = () => {
       });
 
       if (res.data.success) {
+        toast.success("OTP sent to your email");
         setTimeout(() => {
-          toast.success("Account created successfully!");
-          setTimeout(() => {
-            navigate("/signin");
-          }, 750);
+          navigate("/verify-otp", {
+            state: { email: data.email },
+          });
         }, 750);
       } else {
         setTimeout(() => {
