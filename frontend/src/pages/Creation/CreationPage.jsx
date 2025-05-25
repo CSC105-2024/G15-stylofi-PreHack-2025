@@ -55,8 +55,8 @@ const UploadForm = () => {
     setMessage("Initializing AI Analysis Engine...");
 
     try {
-      const res = await api.post("/posts/validate-image", formData);
-      const result = { file: imageFile, isValid: true, data: res.data };
+      const { data } = await api.post("/posts/validate-image", formData);
+      const result = { file: imageFile, isValid: true, data: data };
       setStatus("success");
       setValidated(result);
       return true;
@@ -113,7 +113,7 @@ const UploadForm = () => {
     <div className="flex justify-center items-center mt-12">
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-8 rounded-3xl shadow-md"
+        className="m-4 flex flex-col md:flex-row gap-8 bg-white p-8 rounded-3xl shadow-md"
       >
         <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-2xl h-[360px] overflow-hidden relative">
           {previewUrl ? (
