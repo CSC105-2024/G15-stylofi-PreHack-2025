@@ -1,15 +1,15 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import api from "@/services/api";
-import PasswordInput from "@/components/PasswordInput";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
-import { storeAuthToken } from "@/services/auth";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import api from '@/services/api';
+import PasswordInput from '@/components/PasswordInput';
+import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { storeAuthToken } from '@/services/auth';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -17,8 +17,8 @@ const SignInPage = () => {
   const [loading, setLoading] = useState(false);
 
   const signInSchema = z.object({
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
   });
 
   const {
@@ -27,7 +27,7 @@ const SignInPage = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(signInSchema),
-    mode: "onChange",
+    mode: 'onChange',
   });
 
   const onSubmit = async (data) => {
@@ -43,23 +43,23 @@ const SignInPage = () => {
         }
 
         setTimeout(() => {
-          toast.success("Login Successful");
+          toast.success('Login Successful');
           setTimeout(() => {
-            navigate("/dashboard");
+            navigate('/dashboard');
           }, 750);
         }, 750);
       } else {
         setTimeout(() => {
-          toast.error(res.data?.msg || "Login failed");
+          toast.error(res.data?.msg || 'Login failed');
         }, 750);
       }
     } catch (err) {
-      if (err.response?.data?.msg.includes("OTP")) {
-        navigate("/verify-otp", { state: { email: data.email } });
+      if (err.response?.data?.msg.includes('OTP')) {
+        navigate('/verify-otp', { state: { email: data.email } });
       }
 
       setTimeout(() => {
-        toast.error(err.response?.data?.msg || "Server error");
+        toast.error(err.response?.data?.msg || 'Server error');
       }, 750);
     } finally {
       setTimeout(() => {
@@ -75,14 +75,12 @@ const SignInPage = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Input
-          {...register("email")}
+          {...register('email')}
           type="email"
           placeholder="Email"
           className="bg-input-background/80 w-80 h-12 border-0 rounded-xl ring-primary"
         />
-        {errors.email && (
-          <p className="text-red-500 text-sm">{errors.email.message}</p>
-        )}
+        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
         <PasswordInput
           register={register}
           name="password"
@@ -95,16 +93,14 @@ const SignInPage = () => {
           className="text-white cursor-pointer active:bg-primary-pressed"
         >
           {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-          {loading ? "Signing In..." : "Sign In"}
+          {loading ? 'Signing In...' : 'Sign In'}
         </Button>
       </form>
 
       <p className="text-center text-sm mt-4">
-        Don&apos;t have an account?{" "}
+        Don&apos;t have an account?{' '}
         <Link to="/signup">
-          <span className="text-primary cursor-pointer hover:underline">
-            Sign up
-          </span>
+          <span className="text-primary cursor-pointer hover:underline">Sign up</span>
         </Link>
       </p>
     </>

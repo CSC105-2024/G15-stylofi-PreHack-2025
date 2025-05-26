@@ -1,9 +1,9 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 
-const PasswordInput = ({ register, name, error, placeholder = "Password" }) => {
+const PasswordInput = ({ register, name, error, placeholder = 'Password' }) => {
   const [show, setShow] = useState(false);
 
   return (
@@ -12,7 +12,7 @@ const PasswordInput = ({ register, name, error, placeholder = "Password" }) => {
         <Input
           {...register(name)}
           id={name}
-          type={show ? "text" : "password"}
+          type={show ? 'text' : 'password'}
           placeholder={placeholder}
           className="bg-input-background/80 w-80 h-12 border-0 rounded-xl ring-primary"
         />

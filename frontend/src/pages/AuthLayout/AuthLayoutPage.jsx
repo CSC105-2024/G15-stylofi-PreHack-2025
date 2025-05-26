@@ -1,9 +1,9 @@
-import { Outlet, useLocation } from "react-router-dom";
-import WallpaperGrid from "@/components/WallpaperGrid";
-import Logo from "@/components/Logo";
-import { AnimatePresence, motion } from "framer-motion";
+import { Outlet, useLocation } from 'react-router-dom';
+import WallpaperGrid from '@/components/WallpaperGrid';
+import Logo from '@/components/Logo';
+import { AnimatePresence, motion } from 'framer-motion';
 
-import { useRef } from "react";
+import { useRef } from 'react';
 
 const AuthLayout = () => {
   const location = useLocation();

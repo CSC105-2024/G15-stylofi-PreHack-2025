@@ -1,26 +1,23 @@
-import { redirect } from "react-router-dom";
-import api from "./api";
+import { redirect } from 'react-router-dom';
+import api from './api';
 
 const CACHE_DURATION = 15 * 60 * 1000;
 
 export const checkAuthStatus = async () => {
-  const cachedTimestamp = localStorage.getItem("authTimestamp");
+  const cachedTimestamp = localStorage.getItem('authTimestamp');
   const currentTime = Date.now();
 
-  if (
-    cachedTimestamp &&
-    currentTime - Number(cachedTimestamp) < CACHE_DURATION
-  ) {
+  if (cachedTimestamp && currentTime - Number(cachedTimestamp) < CACHE_DURATION) {
     return true;
   }
 
   try {
-    const res = await api.get("/auth/check");
+    const res = await api.get('/auth/check');
 
     const isAuthenticated = res.data?.authenticated;
 
     if (isAuthenticated) {
-      localStorage.setItem("authTimestamp", Date.now().toString());
+      localStorage.setItem('authTimestamp', Date.now().toString());
       return true;
     } else {
       clearAuthData();
@@ -34,7 +31,7 @@ export const checkAuthStatus = async () => {
 export const publicRouteLoader = async () => {
   const isAuthenticated = await checkAuthStatus();
   if (isAuthenticated) {
-    return redirect("/dashboard");
+    return redirect('/dashboard');
   }
   return null;
 };
@@ -42,21 +39,21 @@ export const publicRouteLoader = async () => {
 export const protectedRouteLoader = async () => {
   const isAuthenticated = await checkAuthStatus();
   if (!isAuthenticated) {
-    return redirect("/signin");
+    return redirect('/signin');
   }
   return null;
 };
 
-export const clearAuthData = () => {
-  localStorage.removeItem("authTimestamp");
+export const clearAuthData = async () => {
+  localStorage.removeItem('authTimestamp');
 
-  api.post("/auth/signout").catch(() => {});
+  await api.post('/auth/signout').catch(() => {});
 };
 
 export const storeAuthToken = (token) => {
   if (!token) return;
 
-  localStorage.setItem("authTimestamp", new Date().getTime().toString());
+  localStorage.setItem('authTimestamp', new Date().getTime().toString());
 
-  api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
