@@ -9,7 +9,6 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
@@ -55,9 +54,9 @@ const AppSidebar = () => {
       />
 
       {/* Active indicator */}
-      {isActive && (
-        <div className="absolute -right-1 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-blue-400 to-purple-500 rounded-full shadow-sm" />
-      )}
+      {/* {isActive && ( */}
+      {/*   <div className="absolute -right-1 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-blue-400 to-purple-500 rounded-full shadow-sm" /> */}
+      {/* )} */}
     </Link>
   );
 
@@ -113,19 +112,18 @@ const AppSidebar = () => {
       <Dialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
         <DialogContent className="bg-surface/95 backdrop-blur-xl border border-border/50 shadow-2xl">
           <DialogHeader className="space-y-3">
-            <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-text to-text/80 bg-clip-text">
-              Sign Out
-            </DialogTitle>
+            {/* <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-text to-text/80 bg-clip-text"> */}
+            {/*   Sign Out */}
+            {/* </DialogTitle> */}
             <DialogDescription className="text-text/70 leading-relaxed">
-              Are you sure you want to sign out? You will need to sign in again to access your
-              account.
+              Are you sure you want to sign out?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="space-x-3 pt-2">
             <Button
               variant="outline"
               onClick={() => setShowLogoutDialog(false)}
-              className="hover:bg-surface/50 transition-colors duration-200 cursor-pointer"
+              className="bg-secondary text-white hover:bg-secondary-hover transition-colors duration-200 cursor-pointer"
             >
               Cancel
             </Button>
