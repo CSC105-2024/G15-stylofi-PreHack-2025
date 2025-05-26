@@ -15,6 +15,13 @@ const findByUsername = async (username: string) => {
   return account;
 };
 
+const findById = async (id: string) => {
+  const user = await db.user.findUnique({
+    where: { id },
+  });
+  return user;
+};
+
 const validatePassword = async (input: string, hash: string) => {
   return compare(input, hash);
 };
@@ -66,7 +73,7 @@ const resendOtp = async (email: string) => {
 const createUser = async (
   username: string,
   email: string,
-  password: string,
+  password: string
 ) => {
   const hashedPassword = await hash(password, 10);
   const user = await db.user.create({
@@ -82,7 +89,7 @@ const createUser = async (
 const updateUser = async (
   userId: string,
   userName: string,
-  password: string,
+  password: string
 ) => {
   const hashedPassword = await hash(password, 10);
 
@@ -106,4 +113,5 @@ export {
   createUser,
   updateUser,
   findByUsername,
+  findById,
 };
