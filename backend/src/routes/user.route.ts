@@ -11,5 +11,6 @@ userRouter.post("/resend-otp", userController.resendOtp);
 userRouter.post("/signin", userController.signInUser);
 userRouter.post("/refresh", userController.refreshToken);
 userRouter.post("/signout", userController.signOutUser);
+userRouter.get("/:id", userController.getUserById);
 
 export { userRouter };

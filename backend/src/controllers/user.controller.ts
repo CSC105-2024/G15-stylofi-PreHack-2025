@@ -158,6 +158,24 @@ const refreshToken = async (c: Context) => {
   }
 };
 
+const getUserById = async (c: Context) => {
+  try {
+    const userId = c.req.param("id");
+    console.log("User ID param:", userId);
+    if (!userId) {
+      return c.json({ success: false, msg: "User ID is required" }, 400);
+    }
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return c.json({ success: false, msg: "User not found" }, 404);
+    }
+    return c.json({ success: true, data: user });
+  } catch (e) {
+    return c.json({ success: false, msg: `${e}` }, 500);
+  }
+};
+
 export {
   createUser,
   signInUser,
@@ -165,4 +183,5 @@ export {
   refreshToken,
   verifyOtp,
   resendOtp,
+  getUserById,
 };
