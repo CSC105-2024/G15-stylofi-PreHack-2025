@@ -11,13 +11,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { getUserName } from '@/services/user';
-import { Heart, Pencil, Trash2, AlertTriangle } from 'lucide-react';
+import { Heart, Pencil, Trash2 } from 'lucide-react';
 import { useFetch } from '@/hooks/useFetch';
 import { toast } from 'react-hot-toast';
 import EditPostForm from './EditPostForm';
 import { useDataContext } from '@/hooks/useDataContext';
 
-export default function PostPopup({ open, onOpenChange, post, onDelete }) {
+export default function PostPopup({ open, onOpenChange, post }) {
   const [author, setAuthor] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -122,7 +122,6 @@ export default function PostPopup({ open, onOpenChange, post, onDelete }) {
       const response = await deletePost(post.id);
       if (response.success) {
         toast.success('Post deleted successfully');
-        onDelete?.(post.id);
         onOpenChange(false);
         setShowDeleteConfirm(false);
       } else {
