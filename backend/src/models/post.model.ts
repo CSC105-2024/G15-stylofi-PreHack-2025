@@ -7,7 +7,7 @@ const getPost = async (id: number) => {
 };
 
 const getAllPosts = async () => {
-  const posts = await db.post.findMany({});
+  const posts = await db.post.findMany({ include: { tags: true } });
   return posts;
 };
 
