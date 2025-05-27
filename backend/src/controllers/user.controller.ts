@@ -13,7 +13,7 @@ const createUser = async (c: Context) => {
     if (!username || !email || !password) {
       return c.json(
         { success: false, data: null, msg: "Missing required fields" },
-        400
+        400,
       );
     }
 
@@ -93,7 +93,7 @@ const signInUser = async (c: Context) => {
     if (!user) {
       return c.json(
         { success: false, data: null, msg: "Email doesn't exist" },
-        401
+        401,
       );
     }
 
@@ -101,7 +101,7 @@ const signInUser = async (c: Context) => {
     if (!isValid) {
       return c.json(
         { success: false, data: null, msg: "Invalid credentials" },
-        401
+        401,
       );
     }
 
@@ -179,7 +179,6 @@ const getUserById = async (c: Context) => {
 
 const getLoggedInUser = async (c: Context) => {
   const userId = c.get("userId");
-  console.log("userId", userId);
 
   if (!userId) {
     return c.json({ success: false, msg: "User ID is required" }, 400);
