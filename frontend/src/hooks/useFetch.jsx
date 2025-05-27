@@ -34,5 +34,47 @@ export const useFetch = () => {
     }
   };
 
-  return { fetchPosts, fetchUserPosts, fetchError, setFetchError, fetchUserData };
+  const likePost = async (postId) => {
+    try {
+      const res = await api.put(`/posts/${postId}/like`);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      setFetchError(e.response?.data?.message || 'Error liking post');
+      throw e;
+    }
+  };
+
+  const unlikePost = async (postId) => {
+    try {
+      const res = await api.put(`/posts/${postId}/unlike`);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      setFetchError(e.response?.data?.message || 'Error unliking post');
+      throw e;
+    }
+  };
+
+  const checkLikeStatus = async (postId) => {
+    try {
+      const res = await api.get(`/posts/${postId}/like-status`);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      setFetchError(e.response?.data?.message || 'Error checking like status');
+      return { success: false, isLiked: false };
+    }
+  };
+
+  return {
+    fetchPosts,
+    fetchUserPosts,
+    fetchError,
+    setFetchError,
+    fetchUserData,
+    likePost,
+    unlikePost,
+    checkLikeStatus,
+  };
 };
