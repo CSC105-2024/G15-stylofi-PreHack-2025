@@ -27,7 +27,6 @@ const getUserName = async (id: string) => {
     where: { id },
     select: {
       username: true,
-      profilePic: true,
     },
   });
   return user;
@@ -84,7 +83,7 @@ const resendOtp = async (email: string) => {
 const createUser = async (
   username: string,
   email: string,
-  password: string,
+  password: string
 ) => {
   const hashedPassword = await hash(password, 10);
   const user = await db.user.create({
@@ -100,7 +99,7 @@ const createUser = async (
 const updateUser = async (
   userId: string,
   userName: string,
-  password: string,
+  password: string
 ) => {
   const hashedPassword = await hash(password, 10);
 

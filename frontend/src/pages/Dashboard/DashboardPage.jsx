@@ -6,7 +6,8 @@ import { useDataContext } from '@/hooks/useDataContext';
 const DashboardPage = () => {
   const { userData } = useDataContext();
   const navigate = useNavigate();
-
+  console.log('userData:', userData); // Add this line
+  console.log('profilePic:', userData?.profilePic); // Add this line
   return (
     <>
       <div className="sticky top-0 z-49 bg-white mt-2 p-2 flex justify-center items-center">

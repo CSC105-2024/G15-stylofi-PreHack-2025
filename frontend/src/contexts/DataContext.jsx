@@ -23,7 +23,8 @@ export const DataContextProvider = ({ children }) => {
         const matchesSearch =
           searchQuery === '' ||
           post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.description?.toLowerCase().includes(searchQuery.toLowerCase());
+          post.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.tags?.some((tag) => tag.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
         const matchesTag =
           selectedTag === null ||
