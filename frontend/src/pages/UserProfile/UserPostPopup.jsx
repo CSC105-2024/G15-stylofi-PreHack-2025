@@ -14,15 +14,19 @@ import { getUserName } from '@/services/user';
 import { Heart, Pencil, Trash2, AlertTriangle } from 'lucide-react';
 import { useFetch } from '@/hooks/useFetch';
 import { toast } from 'react-hot-toast';
+import EditPostForm from './EditPostForm';
+import { useDataContext } from '@/hooks/useDataContext';
 
-export default function PostPopup({ open, onOpenChange, post, onEdit, onDelete }) {
+export default function PostPopup({ open, onOpenChange, post, onDelete }) {
   const [author, setAuthor] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
   const { likePost, unlikePost, checkLikeStatus, deletePost } = useFetch();
+  const { data, setData } = useDataContext();
 
   useEffect(() => {
     const fetchAuthor = async () => {
@@ -96,7 +100,15 @@ export default function PostPopup({ open, onOpenChange, post, onEdit, onDelete }
 
   const handleEdit = (e) => {
     e.stopPropagation();
-    onEdit?.(post);
+    setShowEditForm(true);
+  };
+
+  const handleEditSuccess = (updatedPost) => {
+    // Update the post in the data context
+    if (data) {
+      const updatedData = data.map((p) => (p.id === updatedPost.id ? updatedPost : p));
+      setData(updatedData);
+    }
   };
 
   const handleDeleteClick = (e) => {
@@ -111,8 +123,8 @@ export default function PostPopup({ open, onOpenChange, post, onEdit, onDelete }
       if (response.success) {
         toast.success('Post deleted successfully');
         onDelete?.(post.id);
-        onOpenChange(false); // Close the post popup
-        setShowDeleteConfirm(false); // Close the confirmation dialog
+        onOpenChange(false);
+        setShowDeleteConfirm(false);
       } else {
         toast.error(response.msg || 'Failed to delete post');
       }
@@ -235,6 +247,14 @@ export default function PostPopup({ open, onOpenChange, post, onEdit, onDelete }
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Edit Post Form Dialog */}
+      <EditPostForm
+        post={post}
+        open={showEditForm}
+        onOpenChange={setShowEditForm}
+        onSuccess={handleEditSuccess}
+      />
     </>
   );
 }

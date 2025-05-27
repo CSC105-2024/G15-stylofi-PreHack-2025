@@ -12,7 +12,13 @@ const getAllPosts = async () => {
 };
 
 const getAllPostsByUser = async (userId: string) => {
-  const posts = await db.post.findMany({ where: { authorId: userId } });
+  const posts = await db.post.findMany({
+    where: { authorId: userId },
+    include: {
+      tags: true,
+      author: true,
+    },
+  });
   return posts;
 };
 
@@ -44,14 +50,14 @@ const getOrCreateTagIds = async (labels: string[]) => {
         create: { name: label },
       });
       return tag.id;
-    }),
+    })
   );
   return tagIds;
 };
 
 const updatePost = async (
   id: number,
-  data: { title?: string; description?: string },
+  data: { title?: string; description?: string }
 ) => {
   const post = await db.post.update({
     where: { id },

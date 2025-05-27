@@ -78,6 +78,28 @@ export const useFetch = () => {
     }
   };
 
+  const updatePost = async (postId, data) => {
+    try {
+      const res = await api.put(`/posts/${postId}`, data);
+
+      // Handle both old and new response formats
+      if (res.status === 204) {
+        // If you get 204, treat it as success but create the expected response structure
+        return {
+          success: true,
+          data: null,
+          msg: 'Post updated successfully',
+        };
+      }
+
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      setFetchError(e.response?.data?.msg || e.response?.data?.message || 'Failed to update post');
+      throw e;
+    }
+  };
+
   return {
     fetchPosts,
     fetchUserPosts,
@@ -88,5 +110,6 @@ export const useFetch = () => {
     unlikePost,
     checkLikeStatus,
     deletePost,
+    updatePost,
   };
 };
