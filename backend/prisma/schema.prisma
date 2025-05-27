@@ -19,12 +19,13 @@ model User {
   id           String    @id @default(cuid())
   username     String?   @unique
   email        String?   @unique
+  profilePic   String    @default("https://www.pngplay.com/wp-content/uploads/5/Kim-Jong-Un-PNG-Free-File-Download.png")
   password     String
   otpCode      String?
   otpExpiresAt DateTime?
   otpVerified  Boolean   @default(false)
-  posts        Post[]    // Posts created by the user
-  likedPosts   Post[]    @relation("UserLikes") 
+  posts        Post[] // Posts created by the user
+  likedPosts   Post[]    @relation("UserLikes")
 }
 
 model Post {
