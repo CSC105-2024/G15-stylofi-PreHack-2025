@@ -5,7 +5,7 @@ import PostPopup from './PostPopup';
 
 const MasonryGrid = () => {
   const { fetchPosts } = useFetch();
-  const { data, setData } = useDataContext();
+  const { data, setData, filteredData } = useDataContext();
   const [loadedImages, setLoadedImages] = useState({});
   const [selectedPost, setSelectedPost] = useState(null);
   const [popupOpen, setPopupOpen] = useState(false);
@@ -43,10 +43,12 @@ const MasonryGrid = () => {
     setPopupOpen(true);
   };
 
+  const postsToDisplay = filteredData || data;
+
   return (
     <>
       <div className="columns-1 sm:columns-2 lg:columns-4 gap-4 p-4 [column-fill:_balance]">
-        {data?.map((post) => {
+        {postsToDisplay?.map((post) => {
           const isLoaded = loadedImages[post.id];
           const failedToLoad = isLoaded === false;
           const lowResUrl = getLowQualityUrl(post.imageUrl);
