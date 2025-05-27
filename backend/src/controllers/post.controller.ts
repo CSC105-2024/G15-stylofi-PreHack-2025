@@ -75,17 +75,43 @@ const createPost = async (c: Context) => {
 
 const updatePost = async (c: Context) => {
   const id = Number(c.req.param("id"));
-  if (isNaN(id)) return c.json({ error: "Invalid ID" }, 400);
+  if (isNaN(id)) return c.json({ error: "Invalid ID", success: false }, 400);
 
   const body = await c.req.json();
   const { title, description } = body;
 
+  if (!title || !description) {
+    return c.json(
+      {
+        error: "Title and description are required",
+        success: false,
+      },
+      400
+    );
+  }
+
   try {
     const post = await PostModel.updatePost(id, { title, description });
-    return c.json(post);
+
+    // Return consistent response structure that matches your frontend expectations
+    return c.json(
+      {
+        success: true,
+        data: post,
+        msg: "Post updated successfully",
+      },
+      200
+    );
   } catch (err) {
     console.error(err);
-    return c.json({ error: "Failed to update post" }, 500);
+    return c.json(
+      {
+        error: "Failed to update post",
+        success: false,
+        msg: "Failed to update post",
+      },
+      500
+    );
   }
 };
 
@@ -102,7 +128,7 @@ const deletePost = async (c: Context) => {
         data: deletedPost,
         msg: `successful`,
       },
-      200,
+      200
     );
   } catch (e) {
     return c.json(
@@ -111,7 +137,7 @@ const deletePost = async (c: Context) => {
         data: null,
         msg: `${(e as Error).message}`,
       },
-      404,
+      404
     );
   }
 };
@@ -166,7 +192,7 @@ const checkLikeStatus = async (c: Context) => {
     console.error(err);
     return c.json(
       { error: "Failed to check like status", success: false },
-      500,
+      500
     );
   }
 };
