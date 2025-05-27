@@ -4,11 +4,11 @@ import { useFetch } from '@/hooks/useFetch';
 import UserPostPopup from './UserPostPopup';
 
 const UserPostMasonryGrid = () => {
+  const { fetchUserPosts } = useFetch();
+  const { data, setData, filteredData } = useDataContext();
+  const [loadedImages, setLoadedImages] = useState({});
   const [selectedPost, setSelectedPost] = useState(null);
   const [popupOpen, setPopupOpen] = useState(false);
-  const { fetchUserPosts } = useFetch();
-  const { data, setData } = useDataContext();
-  const [loadedImages, setLoadedImages] = useState({});
 
   useEffect(() => {
     const fetchAndSetPosts = async () => {
@@ -31,7 +31,7 @@ const UserPostMasonryGrid = () => {
   const handleImageLoad = (id) => {
     setTimeout(() => {
       setLoadedImages((prev) => ({ ...prev, [id]: true }));
-    }, 500); // can change timeout, maybe it's a bit much rn
+    }, 500);
   };
 
   const handleImageError = (id) => {
@@ -43,10 +43,12 @@ const UserPostMasonryGrid = () => {
     setPopupOpen(true);
   };
 
+  const postsToDisplay = filteredData || data;
+
   return (
     <>
       <div className="columns-1 sm:columns-2 lg:columns-4 gap-4 p-4 [column-fill:_balance]">
-        {data?.map((post) => {
+        {postsToDisplay?.map((post) => {
           const isLoaded = loadedImages[post.id];
           const failedToLoad = isLoaded === false;
           const lowResUrl = getLowQualityUrl(post.imageUrl);
