@@ -59,7 +59,7 @@ const SignInPage = () => {
           navigate('/verify-otp', {
             state: { email: data.email },
           });
-        }, 750);
+        }, 1500);
       }
 
       setTimeout(() => {

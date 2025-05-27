@@ -9,6 +9,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
@@ -65,15 +66,15 @@ const AppSidebar = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-border/5 to-transparent" />
 
         {/* Logo section */}
-        <div className="relative z-10 mb-8 p-2 rounded-xl bg-surface/50 backdrop-blur-sm border border-border/30 hover:border-border/50 transition-all duration-300 hover:shadow-sm">
+        <div className="relative z-10 mb-8 rounded-xl bg-surface/50 backdrop-blur-sm border border-border/30 hover:border-border/50 transition-all duration-300 hover:shadow-sm">
           <Link
             to="/"
             className="block transform hover:scale-105 transition-transform duration-200"
           >
             <img
-              src="/src/assets/logo.png"
+              src="/logo.png"
               alt="Stylofi Logo"
-              className="w-10 h-10 object-contain"
+              className="w-16 h-16 rounded-full object-contain"
             />
           </Link>
         </div>
@@ -114,9 +115,9 @@ const AppSidebar = () => {
       <Dialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
         <DialogContent className="bg-surface/95 backdrop-blur-xl border border-border/50 shadow-2xl">
           <DialogHeader className="space-y-3">
-            {/* <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-text to-text/80 bg-clip-text"> */}
-            {/*   Sign Out */}
-            {/* </DialogTitle> */}
+            <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-text to-text/80 bg-clip-text">
+              {/* Sign Out */}
+            </DialogTitle>
             <DialogDescription className="text-text/70 leading-relaxed">
               Are you sure you want to sign out?
             </DialogDescription>
