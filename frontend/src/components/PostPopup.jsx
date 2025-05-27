@@ -1,4 +1,11 @@
-import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+  DialogTitle,
+  DialogDescription,
+  DialogHeader,
+} from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { getUserById } from '@/services/user';
@@ -58,7 +65,7 @@ export default function PostPopup({ open, onOpenChange, post }) {
     setIsLikeLoading(true);
     try {
       if (isLiked) {
-        // Unlike post
+        // unlike post
         const response = await unlikePost(post.id);
         if (response.success) {
           setIsLiked(false);
@@ -66,7 +73,7 @@ export default function PostPopup({ open, onOpenChange, post }) {
           toast.success('Post unliked');
         }
       } else {
-        // Like post
+        // like post
         const response = await likePost(post.id);
         if (response.success) {
           setIsLiked(true);
@@ -85,7 +92,16 @@ export default function PostPopup({ open, onOpenChange, post }) {
   if (!post) return null;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md p-0 rounded-2xl">
+      <DialogContent
+        className="max-w-md p-0 rounded-2xl"
+        aria-describedby={`post-${post.id}-description`}
+      >
+        <DialogHeader className="px-4 pt-4">
+          <DialogTitle>{post.title}</DialogTitle>
+          <DialogDescription id={`post-${post.id}-description`}>
+            {post.description}
+          </DialogDescription>
+        </DialogHeader>
         <Card className="p-0 shadow-none border-none">
           <div className="flex flex-col items-center">
             <img
@@ -94,8 +110,6 @@ export default function PostPopup({ open, onOpenChange, post }) {
               className="w-full max-w-xs rounded-xl object-cover mb-4 mt-2"
             />
             <CardContent className="w-full flex flex-col gap-2 px-4 pb-4">
-              <h2 className="font-bold text-lg mb-1">{post.title}</h2>
-              <p className="text-sm text-muted-foreground mb-2">{post.description}</p>
               <div className="flex flex-wrap gap-2 mb-2">
                 {post.tags?.map((tag) => (
                   <span
@@ -123,6 +137,7 @@ export default function PostPopup({ open, onOpenChange, post }) {
                     }}
                     disabled={isLikeLoading}
                     className="flex items-center gap-1 text-sm"
+                    aria-label={isLiked ? 'Unlike post' : 'Like post'}
                   >
                     <Heart
                       size={18}
