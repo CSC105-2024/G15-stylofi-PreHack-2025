@@ -11,7 +11,7 @@ const FormField = ({ id, label, type, value, onChange, required = true, placehol
       value={value}
       onChange={onChange}
       required={required}
-      className="bg-input-background w-80 h-12 border-0 rounded-xl ring-primary"
+      className="bg-input-background w-80 h-12 border-0 rounded-xl ring-primary selection:text-white"
     />
   </>
 );
