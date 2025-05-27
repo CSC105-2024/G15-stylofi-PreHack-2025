@@ -74,6 +74,75 @@ const deletePost = async (id: number, authorId: string) => {
   return post;
 };
 
+const likePost = async (postId: number, userId: string) => {
+  const post = await db.post.findUnique({
+    where: { id: postId },
+    include: { likedBy: true },
+  });
+
+  const alreadyLiked = post?.likedBy.some((user) => user.id === userId);
+
+  if (alreadyLiked) {
+    return post;
+  }
+
+  const updatedPost = await db.post.update({
+    where: { id: postId },
+    data: {
+      likes: { increment: 1 },
+      likedBy: {
+        connect: { id: userId },
+      },
+    },
+    include: {
+      tags: true,
+      author: true,
+      likedBy: true,
+    },
+  });
+
+  return updatedPost;
+};
+
+const unlikePost = async (postId: number, userId: string) => {
+  const post = await db.post.findUnique({
+    where: { id: postId },
+    include: { likedBy: true },
+  });
+
+  const alreadyLiked = post?.likedBy.some((user) => user.id === userId);
+
+  if (!alreadyLiked) {
+    return post;
+  }
+
+  const updatedPost = await db.post.update({
+    where: { id: postId },
+    data: {
+      likes: { decrement: 1 },
+      likedBy: {
+        disconnect: { id: userId },
+      },
+    },
+    include: {
+      tags: true,
+      author: true,
+      likedBy: true,
+    },
+  });
+
+  return updatedPost;
+};
+
+const checkIfUserLikedPost = async (postId: number, userId: string) => {
+  const post = await db.post.findUnique({
+    where: { id: postId },
+    include: { likedBy: true },
+  });
+
+  return post?.likedBy.some((user) => user.id === userId) || false;
+};
+
 export {
   getPost,
   getAllPosts,
@@ -82,4 +151,7 @@ export {
   updatePost,
   deletePost,
   getOrCreateTagIds,
+  likePost,
+  unlikePost,
+  checkIfUserLikedPost,
 };

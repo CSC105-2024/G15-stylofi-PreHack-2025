@@ -120,6 +120,57 @@ const returnValidated = async (c: Context) => {
   return c.json({ success: true, msg: "Image is fasion-related" });
 };
 
+const likePost = async (c: Context) => {
+  const id = Number(c.req.param("id"));
+  if (isNaN(id)) return c.json({ error: "Invalid ID", success: false }, 400);
+
+  const userId = c.get("userId");
+  if (!userId) return c.json({ error: "Unauthorized", success: false }, 401);
+
+  try {
+    const post = await PostModel.likePost(id, userId);
+    return c.json({ success: true, data: post });
+  } catch (err) {
+    console.error(err);
+    return c.json({ error: "Failed to like post", success: false }, 500);
+  }
+};
+
+const unlikePost = async (c: Context) => {
+  const id = Number(c.req.param("id"));
+  if (isNaN(id)) return c.json({ error: "Invalid ID", success: false }, 400);
+
+  const userId = c.get("userId");
+  if (!userId) return c.json({ error: "Unauthorized", success: false }, 401);
+
+  try {
+    const post = await PostModel.unlikePost(id, userId);
+    return c.json({ success: true, data: post });
+  } catch (err) {
+    console.error(err);
+    return c.json({ error: "Failed to unlike post", success: false }, 500);
+  }
+};
+
+const checkLikeStatus = async (c: Context) => {
+  const id = Number(c.req.param("id"));
+  if (isNaN(id)) return c.json({ error: "Invalid ID", success: false }, 400);
+
+  const userId = c.get("userId");
+  if (!userId) return c.json({ error: "Unauthorized", success: false }, 401);
+
+  try {
+    const isLiked = await PostModel.checkIfUserLikedPost(id, userId);
+    return c.json({ success: true, isLiked });
+  } catch (err) {
+    console.error(err);
+    return c.json(
+      { error: "Failed to check like status", success: false },
+      500,
+    );
+  }
+};
+
 export {
   getPost,
   getAllPosts,
@@ -128,4 +179,7 @@ export {
   updatePost,
   deletePost,
   returnValidated,
+  likePost,
+  unlikePost,
+  checkLikeStatus,
 };
