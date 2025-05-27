@@ -85,7 +85,7 @@ export default function EditPostForm({ post, open, onOpenChange, onSuccess }) {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-200 cursor-pointer"
+              className="text-white cursor-pointer active:bg-primary-pressed"
             >
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               {isSubmitting ? 'Updating...' : 'Update Post'}
