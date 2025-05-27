@@ -2,16 +2,22 @@ import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { getUserById } from '@/services/user';
+import { Heart } from 'lucide-react';
+import { useFetch } from '@/hooks/useFetch';
+import { toast } from 'react-hot-toast';
 
 export default function PostPopup({ open, onOpenChange, post }) {
   const [author, setAuthor] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const { likePost, unlikePost, checkLikeStatus } = useFetch();
 
   useEffect(() => {
     const fetchAuthor = async () => {
       if (post?.authorId) {
         try {
           const data = await getUserById(post.authorId);
-          console.log(data);
           if (data.success) {
             setAuthor(data.data);
           } else {
@@ -26,6 +32,55 @@ export default function PostPopup({ open, onOpenChange, post }) {
 
     fetchAuthor();
   }, [post?.authorId]);
+
+  useEffect(() => {
+    if (post) {
+      setLikeCount(post.likes || 0);
+
+      const checkIfLiked = async () => {
+        try {
+          const { success, isLiked } = await checkLikeStatus(post.id);
+          if (success) {
+            setIsLiked(isLiked);
+          }
+        } catch (error) {
+          console.error('Error checking like status:', error);
+        }
+      };
+
+      checkIfLiked();
+    }
+  }, [post]);
+
+  const handleLikeToggle = async () => {
+    if (!post) return;
+
+    setIsLikeLoading(true);
+    try {
+      if (isLiked) {
+        // Unlike post
+        const response = await unlikePost(post.id);
+        if (response.success) {
+          setIsLiked(false);
+          setLikeCount((prev) => Math.max(0, prev - 1));
+          toast.success('Post unliked');
+        }
+      } else {
+        // Like post
+        const response = await likePost(post.id);
+        if (response.success) {
+          setIsLiked(true);
+          setLikeCount((prev) => prev + 1);
+          toast.success('Post liked');
+        }
+      }
+    } catch (error) {
+      toast.error('Failed to update like status');
+      console.error('Error toggling like:', error);
+    } finally {
+      setIsLikeLoading(false);
+    }
+  };
 
   if (!post) return null;
   return (
@@ -59,6 +114,22 @@ export default function PostPopup({ open, onOpenChange, post }) {
                     className="w-7 h-7 rounded-full object-cover border"
                   />
                   <span className="text-xs font-semibold">{author?.username || 'Unknown'}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLikeToggle();
+                    }}
+                    disabled={isLikeLoading}
+                    className="flex items-center gap-1 text-sm"
+                  >
+                    <Heart
+                      size={18}
+                      className={`${isLiked ? 'fill-red-500 text-red-500' : 'text-gray-500'} ${isLikeLoading ? 'opacity-50' : ''}`}
+                    />
+                    <span>{likeCount}</span>
+                  </button>
                 </div>
               </div>
             </CardContent>
