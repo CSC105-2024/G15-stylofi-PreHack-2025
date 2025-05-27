@@ -109,21 +109,25 @@ const VerifyOtpPage = () => {
               className="mx-auto"
             >
               <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
+                <InputOTPSlot index={0} className="ring-primary border-primary" />
+                <InputOTPSlot index={1} className="ring-primary border-primary" />
+                <InputOTPSlot index={2} className="ring-primary border-primary" />
               </InputOTPGroup>
               <InputOTPSeparator />
               <InputOTPGroup>
-                <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
-                <InputOTPSlot index={5} />
+                <InputOTPSlot index={3} className="ring-primary border-primary" />
+                <InputOTPSlot index={4} className="ring-primary border-primary" />
+                <InputOTPSlot index={5} className="ring-primary border-primary" />
               </InputOTPGroup>
             </InputOTP>
           </div>
 
           <div className="space-y-3">
-            <Button type="submit" className="w-full" disabled={checking || value.length < 6}>
+            <Button
+              type="submit"
+              className="w-full text-white"
+              disabled={checking || value.length < 6}
+            >
               {checking && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Verify Email
             </Button>
