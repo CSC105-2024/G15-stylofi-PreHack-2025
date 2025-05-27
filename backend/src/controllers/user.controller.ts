@@ -165,6 +165,7 @@ const getUserById = async (c: Context) => {
     if (!userId) {
       return c.json({ success: false, msg: "User ID is required" }, 400);
     }
+    console.log("jas;kdjf;ladskjf;lk");
 
     const user = await userModel.findById(userId);
     if (!user) {
@@ -176,6 +177,21 @@ const getUserById = async (c: Context) => {
   }
 };
 
+const getLoggedInUser = async (c: Context) => {
+  const userId = c.get("userId");
+  console.log("userId", userId);
+
+  if (!userId) {
+    return c.json({ success: false, msg: "User ID is required" }, 400);
+  }
+  const user = await userModel.findById(userId);
+
+  if (!user) {
+    return c.json({ success: false, msg: "User is not found" }, 404);
+  }
+  return c.json({ success: true, data: user });
+};
+
 export {
   createUser,
   signInUser,
@@ -184,4 +200,5 @@ export {
   verifyOtp,
   resendOtp,
   getUserById,
+  getLoggedInUser,
 };
