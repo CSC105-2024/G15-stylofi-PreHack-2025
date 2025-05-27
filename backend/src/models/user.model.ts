@@ -22,6 +22,16 @@ const findById = async (id: string) => {
   return user;
 };
 
+const getUserName = async (id: string) => {
+  const user = await db.user.findUnique({
+    where: { id },
+    select: {
+      username: true,
+    },
+  });
+  return user;
+};
+
 const validatePassword = async (input: string, hash: string) => {
   return compare(input, hash);
 };
@@ -114,4 +124,5 @@ export {
   updateUser,
   findByUsername,
   findById,
+  getUserName,
 };
