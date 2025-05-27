@@ -31,7 +31,7 @@ const UserPostMasonryGrid = () => {
   const handleImageLoad = (id) => {
     setTimeout(() => {
       setLoadedImages((prev) => ({ ...prev, [id]: true }));
-    }, 2500); // can change timeout, maybe it's a bit much rn
+    }, 500); // can change timeout, maybe it's a bit much rn
   };
 
   const handleImageError = (id) => {

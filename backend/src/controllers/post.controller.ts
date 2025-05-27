@@ -86,7 +86,7 @@ const updatePost = async (c: Context) => {
         error: "Title and description are required",
         success: false,
       },
-      400
+      400,
     );
   }
 
@@ -100,7 +100,7 @@ const updatePost = async (c: Context) => {
         data: post,
         msg: "Post updated successfully",
       },
-      200
+      200,
     );
   } catch (err) {
     console.error(err);
@@ -110,7 +110,7 @@ const updatePost = async (c: Context) => {
         success: false,
         msg: "Failed to update post",
       },
-      500
+      500,
     );
   }
 };
@@ -128,7 +128,7 @@ const deletePost = async (c: Context) => {
         data: deletedPost,
         msg: `successful`,
       },
-      200
+      200,
     );
   } catch (e) {
     return c.json(
@@ -137,7 +137,7 @@ const deletePost = async (c: Context) => {
         data: null,
         msg: `${(e as Error).message}`,
       },
-      404
+      404,
     );
   }
 };
@@ -192,7 +192,7 @@ const checkLikeStatus = async (c: Context) => {
     console.error(err);
     return c.json(
       { error: "Failed to check like status", success: false },
-      500
+      500,
     );
   }
 };

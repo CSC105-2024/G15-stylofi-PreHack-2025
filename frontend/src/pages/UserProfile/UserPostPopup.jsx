@@ -47,7 +47,6 @@ export default function PostPopup({ open, onOpenChange, post }) {
 
     fetchAuthor();
   }, [post?.authorId]);
-  console.log(author);
 
   useEffect(() => {
     if (post) {

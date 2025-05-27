@@ -15,7 +15,7 @@ postRouter.get("/:id/like-status", postController.checkLikeStatus);
 postRouter.post(
   "/validate-image",
   validateImage,
-  postController.returnValidated
+  postController.returnValidated,
 );
 postRouter.post("/create", checkValidation, postController.createPost);
 postRouter.put("/:id", postController.updatePost);
