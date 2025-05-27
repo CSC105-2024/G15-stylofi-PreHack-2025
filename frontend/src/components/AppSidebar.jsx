@@ -12,8 +12,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
-import Logo from '@/components/Logo';
-
 const AppSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -72,7 +70,11 @@ const AppSidebar = () => {
             to="/"
             className="block transform hover:scale-105 transition-transform duration-200"
           >
-            <Logo />
+            <img
+              src="/src/assets/logo.png"
+              alt="Stylofi Logo"
+              className="w-10 h-10 object-contain"
+            />
           </Link>
         </div>
 
