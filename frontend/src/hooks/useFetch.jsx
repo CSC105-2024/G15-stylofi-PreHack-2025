@@ -24,5 +24,15 @@ export const useFetch = () => {
     }
   };
 
-  return { fetchPosts, fetchUserPosts, fetchError, setFetchError };
+  const fetchUserData = async () => {
+    try {
+      const res = await api.get('/auth/me');
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      setFetchError(e.response.data.message);
+    }
+  };
+
+  return { fetchPosts, fetchUserPosts, fetchError, setFetchError, fetchUserData };
 };

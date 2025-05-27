@@ -1,15 +1,32 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
-import { Heart } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { getUserById } from '@/services/user';
 
 export default function PostPopup({ open, onOpenChange, post }) {
+  const [author, setAuthor] = useState(null);
+
+  useEffect(() => {
+    const fetchAuthor = async () => {
+      if (post?.authorId) {
+        try {
+          const data = await getUserById(post.authorId);
+          console.log(data);
+          if (data.success) {
+            setAuthor(data.data);
+          } else {
+            setAuthor(null);
+          }
+        } catch (error) {
+          console.error('Error fetching author:', error);
+          setAuthor(null);
+        }
+      }
+    };
+
+    fetchAuthor();
+  }, [post?.authorId]);
+
   if (!post) return null;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -37,17 +54,11 @@ export default function PostPopup({ open, onOpenChange, post }) {
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-2">
                   <img
-                    src={post.author?.profileImage || '/images/sample-1.jpg'}
-                    alt={post.author?.username || 'User'}
+                    src={author?.profileImage || '/images/sample-1.jpg'}
+                    alt={author?.username || 'User'}
                     className="w-7 h-7 rounded-full object-cover border"
                   />
-                  <span className="text-xs font-semibold">
-                    {post.author?.username || 'Unknown'}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1 text-pink-500">
-                  <Heart size={16} className="fill-pink-500" />
-                  <span className="text-xs font-semibold">{post.likes || 0}</span>
+                  <span className="text-xs font-semibold">{author?.username || 'Unknown'}</span>
                 </div>
               </div>
             </CardContent>
