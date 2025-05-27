@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
-import { getUserById } from '@/services/user';
+import { getUserById, getUserName } from '@/services/user';
 import { Heart } from 'lucide-react';
 import { useFetch } from '@/hooks/useFetch';
 import { toast } from 'react-hot-toast';
@@ -24,7 +24,7 @@ export default function PostPopup({ open, onOpenChange, post }) {
     const fetchAuthor = async () => {
       if (post?.authorId) {
         try {
-          const data = await getUserById(post.authorId);
+          const data = await getUserName(post.authorId);
           if (data.success) {
             setAuthor(data.data);
           } else {
@@ -39,6 +39,7 @@ export default function PostPopup({ open, onOpenChange, post }) {
 
     fetchAuthor();
   }, [post?.authorId]);
+  console.log(author);
 
   useEffect(() => {
     if (post) {
