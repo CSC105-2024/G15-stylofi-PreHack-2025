@@ -17,9 +17,6 @@ const UserProfilePage = () => {
     fetchData();
   }, [setUserData]);
 
-  console.log(userData);
-  console.log(userData?.username);
-
   return (
     <>
       <div className="sticky top-0 z-99 bg-white mt-2 p-2 flex justify-center items-center">
