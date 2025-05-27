@@ -8,10 +8,11 @@ import {
 } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
-import { getUserById, getUserName } from '@/services/user';
+import { getUserName } from '@/services/user';
 import { Heart } from 'lucide-react';
 import { useFetch } from '@/hooks/useFetch';
 import { toast } from 'react-hot-toast';
+import { useDataContext } from '@/hooks/useDataContext';
 
 export default function PostPopup({ open, onOpenChange, post }) {
   const [author, setAuthor] = useState(null);
@@ -19,6 +20,7 @@ export default function PostPopup({ open, onOpenChange, post }) {
   const [likeCount, setLikeCount] = useState(0);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const { likePost, unlikePost, checkLikeStatus } = useFetch();
+  const { setSelectedTag } = useDataContext();
 
   useEffect(() => {
     const fetchAuthor = async () => {
@@ -39,7 +41,6 @@ export default function PostPopup({ open, onOpenChange, post }) {
 
     fetchAuthor();
   }, [post?.authorId]);
-  console.log(author);
 
   useEffect(() => {
     if (post) {
@@ -91,6 +92,12 @@ export default function PostPopup({ open, onOpenChange, post }) {
   };
 
   if (!post) return null;
+  const handleTagClick = (tagName, e) => {
+    e.stopPropagation();
+    setSelectedTag(tagName);
+    onOpenChange(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -116,6 +123,7 @@ export default function PostPopup({ open, onOpenChange, post }) {
                   <span
                     key={tag.name}
                     className="text-blue-500 text-xs font-medium hover:underline cursor-pointer"
+                    onClick={(e) => handleTagClick(tag.name, e)}
                   >
                     #{tag.name}
                   </span>
