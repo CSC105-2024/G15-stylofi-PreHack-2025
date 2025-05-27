@@ -161,11 +161,9 @@ const refreshToken = async (c: Context) => {
 const getUserById = async (c: Context) => {
   try {
     const userId = c.req.param("id");
-    console.log("User ID param:", userId);
     if (!userId) {
       return c.json({ success: false, msg: "User ID is required" }, 400);
     }
-    console.log("jas;kdjf;ladskjf;lk");
 
     const user = await userModel.findById(userId);
     if (!user) {
