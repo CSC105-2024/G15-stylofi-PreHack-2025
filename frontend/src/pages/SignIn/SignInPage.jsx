@@ -55,7 +55,11 @@ const SignInPage = () => {
       }
     } catch (err) {
       if (err.response?.data?.msg.includes('OTP')) {
-        navigate('/verify-otp', { state: { email: data.email } });
+        setTimeout(() => {
+          navigate('/verify-otp', {
+            state: { email: data.email },
+          });
+        }, 750);
       }
 
       setTimeout(() => {
