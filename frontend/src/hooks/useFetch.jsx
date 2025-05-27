@@ -67,6 +67,17 @@ export const useFetch = () => {
     }
   };
 
+  const deletePost = async (postId) => {
+    try {
+      const res = await api.delete(`/posts/${postId}`);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      setFetchError(e.response?.data?.msg || 'Failed to delete post');
+      throw e;
+    }
+  };
+
   return {
     fetchPosts,
     fetchUserPosts,
@@ -76,5 +87,6 @@ export const useFetch = () => {
     likePost,
     unlikePost,
     checkLikeStatus,
+    deletePost,
   };
 };
