@@ -42,7 +42,7 @@ export default function PostPopup({ open, onOpenChange, post }) {
 
   useEffect(() => {
     if (post) {
-      setLikeCount(post.likes || 0);
+      setLikeCount(post.likes);
 
       const checkIfLiked = async () => {
         try {
@@ -129,7 +129,7 @@ export default function PostPopup({ open, onOpenChange, post }) {
                   />
                   <span className="text-xs font-semibold">{author?.username || 'Unknown'}</span>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex justify-between items-center gap-1">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -140,10 +140,12 @@ export default function PostPopup({ open, onOpenChange, post }) {
                     aria-label={isLiked ? 'Unlike post' : 'Like post'}
                   >
                     <Heart
-                      size={18}
+                      size={24}
                       className={`${isLiked ? 'fill-red-500 text-red-500' : 'text-gray-500'} ${isLikeLoading ? 'opacity-50' : ''}`}
                     />
-                    <span>{likeCount}</span>
+                    <div className="w-2">
+                      <span>{likeCount}</span>
+                    </div>
                   </button>
                 </div>
               </div>
