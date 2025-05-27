@@ -1,19 +1,9 @@
 import SearchInput from '@/components/SearchInput';
 import UserPostMasonryGrid from './UserPostMasonryGrid';
-import { useFetch } from '@/hooks/useFetch';
-import { useEffect, useState } from 'react';
+import { useDataContext } from '@/hooks/useDataContext';
 
 const UserProfilePage = () => {
-  const { fetchUserData } = useFetch();
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetchUserData();
-      setUserData(res.data);
-    };
-    fetchData();
-  }, [setUserData]);
+  const { userData } = useDataContext();
 
   return (
     <>
@@ -21,7 +11,7 @@ const UserProfilePage = () => {
         <SearchInput />
         <div className="ml-4 border-3 border-primary rounded-full">
           <img
-            src="/images/sample-1.jpg"
+            src={userData?.profilePic}
             alt=""
             className="p-0.5 w-8 h-8 lg:w-12 lg:h-12 rounded-full cursor-pointer"
           />

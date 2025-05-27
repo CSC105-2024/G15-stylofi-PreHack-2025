@@ -15,7 +15,7 @@ import { toast } from 'react-hot-toast';
 import { useDataContext } from '@/hooks/useDataContext';
 
 export default function PostPopup({ open, onOpenChange, post }) {
-  const [author, setAuthor] = useState(null);
+  const [author, setAuthor] = useState({});
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
@@ -26,9 +26,9 @@ export default function PostPopup({ open, onOpenChange, post }) {
     const fetchAuthor = async () => {
       if (post?.authorId) {
         try {
-          const data = await getUserName(post.authorId);
-          if (data.success) {
-            setAuthor(data.data);
+          const { success, data } = await getUserName(post.authorId);
+          if (success) {
+            setAuthor({ name: data.username, profilePic: data.profilePic });
           } else {
             setAuthor(null);
           }
@@ -132,11 +132,11 @@ export default function PostPopup({ open, onOpenChange, post }) {
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-2">
                   <img
-                    src={author?.profileImage || '/images/sample-1.jpg'}
-                    alt={author?.username || 'User'}
+                    src={author?.profilePic}
+                    alt={author?.name || 'User'}
                     className="w-7 h-7 rounded-full object-cover border"
                   />
-                  <span className="text-xs font-semibold">{author?.username || 'Unknown'}</span>
+                  <span className="text-xs font-semibold">{author?.name}</span>
                 </div>
                 <div className="flex justify-between items-center gap-1">
                   <button
