@@ -23,7 +23,8 @@ model User {
   otpCode      String?
   otpExpiresAt DateTime?
   otpVerified  Boolean   @default(false)
-  posts        Post[]
+  posts        Post[]    // Posts created by the user
+  likedPosts   Post[]    @relation("UserLikes") 
 }
 
 model Post {
@@ -36,6 +37,7 @@ model Post {
   link        String?
   imageUrl    String
   tags        Tag[]    @relation("PostTag")
+  likedBy     User[]   @relation("UserLikes")
   createdAt   DateTime @default(now())
 }
 
