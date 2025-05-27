@@ -23,7 +23,7 @@ const SearchInput = () => {
           <span className="text-sm font-medium">#{selectedTag}</span>
           <button
             onClick={() => setSelectedTag(null)}
-            className="ml-1 text-blue-600 hover:text-blue-800"
+            className="ml-1 text-blue-600 hover:text-blue-800 cursor-pointer"
             aria-label="Clear tag filter"
           >
             <X size={16} />

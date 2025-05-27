@@ -203,8 +203,8 @@ const getUserName = async (c: Context) => {
   if (!userId) {
     return c.json({ success: false, msg: "User ID is required" }, 400);
   }
-  const userName = await userModel.getUserName(userId);
-  return c.json({ success: true, data: userName });
+  const user = await userModel.getUserName(userId);
+  return c.json({ success: true, data: user });
 };
 
 export {
