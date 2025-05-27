@@ -22,7 +22,7 @@ const findById = async (id: string) => {
   return user;
 };
 
-const getUserName = async (id: string) => {
+const getUserInfo = async (id: string) => {
   const user = await db.user.findUnique({
     where: { id },
     select: {
@@ -125,5 +125,5 @@ export {
   updateUser,
   findByUsername,
   findById,
-  getUserName,
+  getUserInfo,
 };

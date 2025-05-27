@@ -203,7 +203,7 @@ const getUserName = async (c: Context) => {
   if (!userId) {
     return c.json({ success: false, msg: "User ID is required" }, 400);
   }
-  const user = await userModel.getUserName(userId);
+  const user = await userModel.getUserInfo(userId);
   return c.json({ success: true, data: user });
 };
 
