@@ -23,11 +23,11 @@ const getAllPostsByUser = async (c: Context) => {
 };
 
 const createPost = async (c: Context) => {
-    const formData = await c.req.formData();
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
-    const link = formData.get("link") as string;
-    const image = formData.get("image") as File;
+  const formData = await c.req.formData();
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const link = formData.get("link") as string;
+  const image = formData.get("image") as File;
 
   if (!(image instanceof File)) {
     return c.json({ error: "Image is not a valid file upload" }, 400);
@@ -55,7 +55,7 @@ const createPost = async (c: Context) => {
     if (!labels) return c.json({ error: "Image labels missing" }, 400);
 
     const imageUrl = uploaded.secure_url;
-    const id = uploaded.public_id;
+    const id = uploaded.public_id.replace("stylofi/", "");
 
     const tagIds = await PostModel.getOrCreateTagIds(labels);
 
@@ -88,7 +88,7 @@ const updatePost = async (c: Context) => {
         error: "Title and description are required",
         success: false,
       },
-      400
+      400,
     );
   }
 
@@ -101,7 +101,7 @@ const updatePost = async (c: Context) => {
         data: post,
         msg: "Post updated successfully",
       },
-      200
+      200,
     );
   } catch (err) {
     console.error(err);
@@ -111,7 +111,7 @@ const updatePost = async (c: Context) => {
         success: false,
         msg: "Failed to update post",
       },
-      500
+      500,
     );
   }
 };
@@ -130,7 +130,7 @@ const deletePost = async (c: Context) => {
         data: deletedPost,
         msg: `successful`,
       },
-      200
+      200,
     );
   } catch (e) {
     return c.json(
@@ -139,7 +139,7 @@ const deletePost = async (c: Context) => {
         data: null,
         msg: `${(e as Error).message}`,
       },
-      404
+      404,
     );
   }
 };
@@ -194,7 +194,7 @@ const checkLikeStatus = async (c: Context) => {
     console.error(err);
     return c.json(
       { error: "Failed to check like status", success: false },
-      500
+      500,
     );
   }
 };
