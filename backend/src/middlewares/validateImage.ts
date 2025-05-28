@@ -26,12 +26,6 @@ const validateImage = async (c: Context, next: Next) => {
   });
   // console.log(safeSearch);
 
-  const isAdultContent = safeSearch.safeSearchAnnotation?.adult;
-
-  if (isAdultContent !== "VERY_UNLIKELY") {
-    return c.json({ success: false, msg: "Image contains adult content" }, 400);
-  }
-
   const labels =
     result.labelAnnotations?.map(
       (label) => label.description?.toLowerCase() ?? "",
@@ -56,6 +50,12 @@ const validateImage = async (c: Context, next: Next) => {
 
   if (!isFashion) {
     return c.json({ success: false, msg: "Image is not fashion-related" }, 400);
+  }
+
+  const isAdultContent = safeSearch.safeSearchAnnotation?.adult;
+
+  if (isAdultContent !== "VERY_UNLIKELY") {
+    return c.json({ success: false, msg: "Image contains adult content" }, 400);
   }
 
   c.set("imageLabels", labels);
