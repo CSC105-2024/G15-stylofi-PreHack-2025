@@ -5,6 +5,7 @@ import { issueTokens } from "../utils/auth.ts";
 import { deleteCookie, getSignedCookie } from "hono/cookie";
 import { verifyRefreshToken } from "../utils/token.ts";
 import { sendOtp } from "../utils/otp.ts";
+import { cloudinary } from "../utils/cloudinary.ts";
 
 const createUser = async (c: Context) => {
   try {
@@ -13,7 +14,7 @@ const createUser = async (c: Context) => {
     if (!username || !email || !password) {
       return c.json(
         { success: false, data: null, msg: "Missing required fields" },
-        400,
+        400
       );
     }
 
@@ -93,7 +94,7 @@ const signInUser = async (c: Context) => {
     if (!user) {
       return c.json(
         { success: false, data: null, msg: "Email doesn't exist" },
-        401,
+        401
       );
     }
 
@@ -101,7 +102,7 @@ const signInUser = async (c: Context) => {
     if (!isValid) {
       return c.json(
         { success: false, data: null, msg: "Invalid credentials" },
-        401,
+        401
       );
     }
 
@@ -207,6 +208,68 @@ const getUserName = async (c: Context) => {
   return c.json({ success: true, data: user });
 };
 
+const updateProfile = async (c: Context) => {
+  try {
+    const userId = c.get("userId");
+    if (!userId) {
+      return c.json({ success: false, msg: "Unauthorized" }, 401);
+    }
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return c.json({ success: false, msg: "User not found" }, 404);
+    }
+
+    const formData = await c.req.formData();
+    const username = formData.get("username") as string;
+    const password = formData.get("newPassword") as string;
+    const profilePic = formData.get("profilePic") as File;
+
+    const updateData: any = {};
+
+    if (username) {
+      const existingUser = await userModel.findByUsername(username);
+      if (existingUser && existingUser.id !== userId) {
+        return c.json({ success: false, msg: "Username already exists" }, 400);
+      }
+      updateData.username = username;
+    }
+
+    if (password) {
+      const isValid = await userModel.validatePassword(password, user.password);
+      if (!isValid) {
+        return c.json(
+          { success: false, data: null, msg: "Invalid credentials" },
+          401
+        );
+      }
+      updateData.password = password;
+    }
+
+    if (profilePic instanceof File) {
+      const buffer = await profilePic.arrayBuffer();
+      const base64Image = Buffer.from(buffer).toString("base64");
+      const dataUri = `data:${profilePic.type};base64,${base64Image}`;
+
+      const uploaded = await cloudinary.uploader.upload(dataUri, {
+        folder: "stylofi/profiles",
+      });
+
+      updateData.profilePic = uploaded.secure_url;
+    }
+
+    const updatedUser = await userModel.updateUser(userId, updateData);
+    return c.json({
+      success: true,
+      data: updatedUser,
+      msg: "Profile updated successfully",
+    });
+  } catch (e) {
+    console.error(e);
+    return c.json({ success: false, msg: "Failed to update profile" }, 500);
+  }
+};
+
 export {
   createUser,
   signInUser,
@@ -217,4 +280,5 @@ export {
   getUserById,
   getLoggedInUser,
   getUserName,
+  updateProfile,
 };

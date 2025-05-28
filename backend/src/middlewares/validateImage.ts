@@ -32,7 +32,7 @@ const validateImage = async (c: Context, next: Next) => {
       (label) => label.description?.toLowerCase() ?? ""
     ) ?? [];
 
-  console.log(labels);
+  // console.log(labels);
 
   const fashionKeywords = keywords;
 
@@ -45,7 +45,6 @@ const validateImage = async (c: Context, next: Next) => {
   }
 
   const isAdultContent = safeSearch.safeSearchAnnotation?.adult;
-  console.log(isAdultContent);
 
   if (isAdultContent !== "VERY_UNLIKELY" && isAdultContent !== "UNLIKELY") {
     return c.json(

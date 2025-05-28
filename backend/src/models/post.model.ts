@@ -1,7 +1,8 @@
 import db from "../lib/db.ts";
 import type { CreatePostInput } from "../types/index.ts";
+import { cloudinary } from "../utils/cloudinary.ts";
 
-const getPost = async (id: number) => {
+const getPost = async (id: string) => {
   const post = await db.post.findUnique({ where: { id } });
   return post;
 };
@@ -25,6 +26,7 @@ const getAllPostsByUser = async (userId: string) => {
 const createPost = async (data: CreatePostInput) => {
   const post = await db.post.create({
     data: {
+      id: data.id,
       title: data.title,
       description: data.description,
       authorId: data.authorId,
@@ -56,7 +58,7 @@ const getOrCreateTagIds = async (labels: string[]) => {
 };
 
 const updatePost = async (
-  id: number,
+  id: string,
   data: { title?: string; description?: string }
 ) => {
   const post = await db.post.update({
@@ -74,13 +76,14 @@ const updatePost = async (
   return post;
 };
 
-const deletePost = async (id: number, authorId: string) => {
+const deletePost = async (id: string, authorId: string) => {
+  await cloudinary.uploader.destroy(id);
   const post = await db.post.delete({ where: { id, authorId: authorId } });
 
   return post;
 };
 
-const likePost = async (postId: number, userId: string) => {
+const likePost = async (postId: string, userId: string) => {
   const post = await db.post.findUnique({
     where: { id: postId },
     include: { likedBy: true },
@@ -110,7 +113,7 @@ const likePost = async (postId: number, userId: string) => {
   return updatedPost;
 };
 
-const unlikePost = async (postId: number, userId: string) => {
+const unlikePost = async (postId: string, userId: string) => {
   const post = await db.post.findUnique({
     where: { id: postId },
     include: { likedBy: true },
@@ -140,7 +143,7 @@ const unlikePost = async (postId: number, userId: string) => {
   return updatedPost;
 };
 
-const checkIfUserLikedPost = async (postId: number, userId: string) => {
+const checkIfUserLikedPost = async (postId: string, userId: string) => {
   const post = await db.post.findUnique({
     where: { id: postId },
     include: { likedBy: true },

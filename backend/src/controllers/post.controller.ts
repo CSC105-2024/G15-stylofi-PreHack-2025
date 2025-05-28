@@ -3,8 +3,8 @@ import * as PostModel from "../models/post.model.ts";
 import { cloudinary } from "../utils/cloudinary.ts";
 
 const getPost = async (c: Context) => {
-  const id = Number(c.req.param("id"));
-  if (isNaN(id)) return c.json({ error: "Invalid ID", success: false }, 400);
+  const id = c.req.param("id");
+  if (!id) return c.json({ error: "Invalid ID", success: false }, 400);
   const post = await PostModel.getPost(id);
   if (!post) return c.json({ error: "Post not found", success: false }, 404);
   return c.json(post);
@@ -23,11 +23,11 @@ const getAllPostsByUser = async (c: Context) => {
 };
 
 const createPost = async (c: Context) => {
-  const formData = await c.req.formData();
-  const title = formData.get("title") as string;
-  const description = formData.get("description") as string;
-  const link = formData.get("link") as string;
-  const image = formData.get("image") as File;
+    const formData = await c.req.formData();
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const link = formData.get("link") as string;
+    const image = formData.get("image") as File;
 
   if (!(image instanceof File)) {
     return c.json({ error: "Image is not a valid file upload" }, 400);
@@ -55,10 +55,12 @@ const createPost = async (c: Context) => {
     if (!labels) return c.json({ error: "Image labels missing" }, 400);
 
     const imageUrl = uploaded.secure_url;
+    const id = uploaded.public_id;
 
     const tagIds = await PostModel.getOrCreateTagIds(labels);
 
     const post = await PostModel.createPost({
+      id,
       title,
       description,
       link,
@@ -74,8 +76,8 @@ const createPost = async (c: Context) => {
 };
 
 const updatePost = async (c: Context) => {
-  const id = Number(c.req.param("id"));
-  if (isNaN(id)) return c.json({ error: "Invalid ID", success: false }, 400);
+  const id = c.req.param("id");
+  if (!id) return c.json({ error: "Invalid ID", success: false }, 400);
 
   const body = await c.req.json();
   const { title, description } = body;
@@ -86,21 +88,20 @@ const updatePost = async (c: Context) => {
         error: "Title and description are required",
         success: false,
       },
-      400,
+      400
     );
   }
 
   try {
     const post = await PostModel.updatePost(id, { title, description });
 
-    // Return consistent response structure that matches your frontend expectations
     return c.json(
       {
         success: true,
         data: post,
         msg: "Post updated successfully",
       },
-      200,
+      200
     );
   } catch (err) {
     console.error(err);
@@ -110,13 +111,14 @@ const updatePost = async (c: Context) => {
         success: false,
         msg: "Failed to update post",
       },
-      500,
+      500
     );
   }
 };
 
 const deletePost = async (c: Context) => {
-  const id = Number(c.req.param("id"));
+  const id = c.req.param("id");
+  if (!id) return c.json({ error: "Invalid ID", success: false }, 400);
   const userId = c.get("userId");
 
   try {
@@ -128,7 +130,7 @@ const deletePost = async (c: Context) => {
         data: deletedPost,
         msg: `successful`,
       },
-      200,
+      200
     );
   } catch (e) {
     return c.json(
@@ -137,7 +139,7 @@ const deletePost = async (c: Context) => {
         data: null,
         msg: `${(e as Error).message}`,
       },
-      404,
+      404
     );
   }
 };
@@ -147,8 +149,8 @@ const returnValidated = async (c: Context) => {
 };
 
 const likePost = async (c: Context) => {
-  const id = Number(c.req.param("id"));
-  if (isNaN(id)) return c.json({ error: "Invalid ID", success: false }, 400);
+  const id = c.req.param("id");
+  if (!id) return c.json({ error: "Invalid ID", success: false }, 400);
 
   const userId = c.get("userId");
   if (!userId) return c.json({ error: "Unauthorized", success: false }, 401);
@@ -163,8 +165,8 @@ const likePost = async (c: Context) => {
 };
 
 const unlikePost = async (c: Context) => {
-  const id = Number(c.req.param("id"));
-  if (isNaN(id)) return c.json({ error: "Invalid ID", success: false }, 400);
+  const id = c.req.param("id");
+  if (!id) return c.json({ error: "Invalid ID", success: false }, 400);
 
   const userId = c.get("userId");
   if (!userId) return c.json({ error: "Unauthorized", success: false }, 401);
@@ -179,8 +181,8 @@ const unlikePost = async (c: Context) => {
 };
 
 const checkLikeStatus = async (c: Context) => {
-  const id = Number(c.req.param("id"));
-  if (isNaN(id)) return c.json({ error: "Invalid ID", success: false }, 400);
+  const id = c.req.param("id");
+  if (!id) return c.json({ error: "Invalid ID", success: false }, 400);
 
   const userId = c.get("userId");
   if (!userId) return c.json({ error: "Unauthorized", success: false }, 401);
@@ -192,7 +194,7 @@ const checkLikeStatus = async (c: Context) => {
     console.error(err);
     return c.json(
       { error: "Failed to check like status", success: false },
-      500,
+      500
     );
   }
 };

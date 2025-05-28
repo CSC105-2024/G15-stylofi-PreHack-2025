@@ -14,6 +14,7 @@ userRouter.post("/refresh", userController.refreshToken);
 userRouter.post("/signout", userController.signOutUser);
 userRouter.get("/me", verifyAuth, userController.getLoggedInUser);
 userRouter.get("/username/:id", userController.getUserName);
+userRouter.put("/update", verifyAuth, userController.updateProfile);
 userRouter.get("/:id", userController.getUserById);
 
 export { userRouter };
