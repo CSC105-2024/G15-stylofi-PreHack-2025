@@ -15,6 +15,7 @@ import { protectedRouteLoader, publicRouteLoader } from './services/auth';
 import { Loader2 } from 'lucide-react';
 import VerifyOtpPage from './pages/VerifyOTP/VerifyOtpPage';
 import UserProfilePage from './pages/UserProfile/UserProfilePage';
+import EditUserAccount from './pages/UserProfile/EditUserAccount';
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -63,10 +64,10 @@ const router = createBrowserRouter([
         path: 'profile',
         element: <UserProfilePage />,
       },
-      // {
-      //   path: "/profile/edit",
-      //   element: <EditUserAccount />,
-      // },
+      {
+        path: 'profile/edit',
+        element: <EditUserAccount />,
+      },
     ],
   },
 ]);
