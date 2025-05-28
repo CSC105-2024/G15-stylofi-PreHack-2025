@@ -55,7 +55,10 @@ const validateImage = async (c: Context, next: Next) => {
   const isAdultContent = safeSearch.safeSearchAnnotation?.adult;
 
   if (isAdultContent !== "VERY_UNLIKELY") {
-    return c.json({ success: false, msg: "Image contains adult content" }, 400);
+    return c.json(
+      { success: false, msg: "Image may contain adult content" },
+      400,
+    );
   }
 
   c.set("imageLabels", labels);
