@@ -3,7 +3,7 @@ import { ImageAnnotatorClient } from "@google-cloud/vision";
 import { keywords } from "../utils/fashionKeywords.ts";
 
 const keyString = Buffer.from(process.env.GOOGLE_CLOUD_KEY!, "base64").toString(
-  "utf-8"
+  "utf-8",
 );
 const credentials = JSON.parse(keyString);
 
@@ -29,7 +29,7 @@ const validateImage = async (c: Context, next: Next) => {
 
   const labels =
     result.labelAnnotations?.map(
-      (label) => label.description?.toLowerCase() ?? ""
+      (label) => label.description?.toLowerCase() ?? "",
     ) ?? [];
 
   // console.log(labels);
@@ -37,7 +37,7 @@ const validateImage = async (c: Context, next: Next) => {
   const fashionKeywords = keywords;
 
   const isFashion = labels.some((label) =>
-    fashionKeywords.some((keyword) => label.includes(keyword))
+    fashionKeywords.some((keyword) => label.includes(keyword)),
   );
 
   if (!isFashion) {
@@ -49,7 +49,7 @@ const validateImage = async (c: Context, next: Next) => {
   if (isAdultContent !== "VERY_UNLIKELY" && isAdultContent !== "UNLIKELY") {
     return c.json(
       { success: false, msg: "Image may contain adult content" },
-      400
+      400,
     );
   }
 
