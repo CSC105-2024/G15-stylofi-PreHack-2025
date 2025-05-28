@@ -34,12 +34,14 @@ const UserProfilePage = () => {
       <div className="sticky top-0 z-49 bg-white mt-2 p-2 flex justify-center items-center">
         <SearchInput />
         <div className="relative ml-4" ref={menuRef}>
-          <img
-            src={userData?.profilePic}
-            alt="Profile"
-            className="w-8 h-8 lg:w-16 lg:h-16 rounded-full cursor-pointer"
-            onClick={() => setMenuOpen((open) => !open)}
-          />
+          <div className="border-3 border-primary hover:border-secondary rounded-full">
+            <img
+              src={userData?.profilePic}
+              alt="Profile"
+              className="w-8 h-8 lg:w-16 lg:h-16 rounded-full cursor-pointer p-0.5"
+              onClick={() => setMenuOpen((open) => !open)}
+            />
+          </div>
           {menuOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
               <button
