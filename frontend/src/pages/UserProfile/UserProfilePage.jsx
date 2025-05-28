@@ -1,9 +1,26 @@
 import SearchInput from '@/components/SearchInput';
 import UserPostMasonryGrid from './UserPostMasonryGrid';
 import { useDataContext } from '@/hooks/useDataContext';
+import { Loader2, Settings } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfilePage = () => {
   const { userData } = useDataContext();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   if (!userData)
     return (
@@ -16,12 +33,27 @@ const UserProfilePage = () => {
     <>
       <div className="sticky top-0 z-49 bg-white mt-2 p-2 flex justify-center items-center">
         <SearchInput />
-        <div className="ml-4 border-3 border-primary rounded-full">
+        <div className="relative ml-4" ref={menuRef}>
           <img
             src={userData?.profilePic}
-            alt=""
-            className="p-0.5 w-8 h-8 lg:w-12 lg:h-12 rounded-full cursor-pointer"
+            alt="Profile"
+            className="w-8 h-8 lg:w-12 lg:h-12 rounded-full cursor-pointer"
+            onClick={() => setMenuOpen((open) => !open)}
           />
+          {menuOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate('/profile/edit');
+                }}
+                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Edit Profile
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div className="max-w-6xl mx-auto py-8">

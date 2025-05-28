@@ -144,6 +144,7 @@ const PostPopup = ({ open, onOpenChange, post }) => {
                       e.stopPropagation();
                       handleLikeToggle();
                     }}
+                    tabIndex="-1"
                     disabled={isLikeLoading}
                     className="flex items-center gap-1 text-sm"
                     aria-label={isLiked ? 'Unlike post' : 'Like post'}
