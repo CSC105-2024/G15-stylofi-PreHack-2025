@@ -42,11 +42,9 @@ const SignInPage = () => {
           storeAuthToken(res.data.token);
         }
 
+        toast.success('Login Successful');
         setTimeout(() => {
-          toast.success('Login Successful');
-          setTimeout(() => {
-            navigate('/dashboard');
-          }, 750);
+          navigate('/dashboard');
         }, 750);
       } else {
         setTimeout(() => {

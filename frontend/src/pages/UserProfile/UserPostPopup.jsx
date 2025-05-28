@@ -10,15 +10,13 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
-import { getUserName } from '@/services/user';
 import { Heart, Pencil, Trash2 } from 'lucide-react';
 import { useFetch } from '@/hooks/useFetch';
 import { toast } from 'react-hot-toast';
 import EditPostForm from './EditPostForm';
 import { useDataContext } from '@/hooks/useDataContext';
 
-export default function PostPopup({ open, onOpenChange, post }) {
-  const [author, setAuthor] = useState(null);
+const UserPostPopup = ({ open, onOpenChange, post }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
@@ -27,26 +25,6 @@ export default function PostPopup({ open, onOpenChange, post }) {
   const [showEditForm, setShowEditForm] = useState(false);
   const { likePost, unlikePost, checkLikeStatus, deletePost } = useFetch();
   const { data, setData } = useDataContext();
-
-  useEffect(() => {
-    const fetchAuthor = async () => {
-      if (post?.authorId) {
-        try {
-          const data = await getUserName(post.authorId);
-          if (data.success) {
-            setAuthor(data.data);
-          } else {
-            setAuthor(null);
-          }
-        } catch (error) {
-          console.error('Error fetching author:', error);
-          setAuthor(null);
-        }
-      }
-    };
-
-    fetchAuthor();
-  }, [post?.authorId]);
 
   useEffect(() => {
     if (post) {
@@ -255,4 +233,6 @@ export default function PostPopup({ open, onOpenChange, post }) {
       />
     </>
   );
-}
+};
+
+export default UserPostPopup;

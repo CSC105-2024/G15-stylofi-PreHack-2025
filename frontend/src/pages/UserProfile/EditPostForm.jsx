@@ -12,7 +12,7 @@ import { useFetch } from '@/hooks/useFetch';
 import { toast } from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 
-export default function EditPostForm({ post, open, onOpenChange, onSuccess }) {
+const EditPostForm = ({ post, open, onOpenChange, onSuccess }) => {
   const { updatePost } = useFetch();
   const [title, setTitle] = useState(post?.title || '');
   const [description, setDescription] = useState(post?.description || '');
@@ -95,4 +95,6 @@ export default function EditPostForm({ post, open, onOpenChange, onSuccess }) {
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default EditPostForm;

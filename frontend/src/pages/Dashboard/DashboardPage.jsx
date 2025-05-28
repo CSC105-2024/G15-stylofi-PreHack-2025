@@ -2,10 +2,18 @@ import MasonryGrid from '@/components/MasonryGrid';
 import SearchInput from '@/components/SearchInput';
 import { useNavigate } from 'react-router-dom';
 import { useDataContext } from '@/hooks/useDataContext';
+import { Loader2 } from 'lucide-react';
 
 const DashboardPage = () => {
   const { userData } = useDataContext();
   const navigate = useNavigate();
+
+  if (!userData)
+    return (
+      <div className="flex items-center justify-center h-screen w-screen">
+        <Loader2 className="animate-spin w-12 h-12 text-primary" />
+      </div>
+    );
 
   return (
     <>

@@ -9,7 +9,7 @@ import FormField from '@/components/FormField';
 import UploadButton from '@/components/UploadButton';
 import StatusMessage from '@/components/StatusMessage';
 
-const UploadForm = () => {
+const CreationPage = () => {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState('');
@@ -178,4 +178,4 @@ const UploadForm = () => {
   );
 };
 
-export default UploadForm;
+export default CreationPage;

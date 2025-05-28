@@ -14,7 +14,7 @@ import { useFetch } from '@/hooks/useFetch';
 import { toast } from 'react-hot-toast';
 import { useDataContext } from '@/hooks/useDataContext';
 
-export default function PostPopup({ open, onOpenChange, post }) {
+const PostPopup = ({ open, onOpenChange, post }) => {
   const [author, setAuthor] = useState({});
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -165,4 +165,6 @@ export default function PostPopup({ open, onOpenChange, post }) {
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default PostPopup;
