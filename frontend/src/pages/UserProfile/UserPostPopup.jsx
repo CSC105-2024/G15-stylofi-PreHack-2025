@@ -98,6 +98,10 @@ const UserPostPopup = ({ open, onOpenChange, post }) => {
     try {
       const response = await deletePost(post.id);
       if (response.success) {
+        if (data) {
+          const updatedData = data.filter((p) => p.id !== post.id);
+          setData(updatedData);
+        }
         toast.success('Post deleted successfully');
         onOpenChange(false);
         setShowDeleteConfirm(false);
@@ -148,6 +152,7 @@ const UserPostPopup = ({ open, onOpenChange, post }) => {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={handleEdit}
+                      tabIndex="-1"
                       className="p-1 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
                       aria-label="Edit post"
                     >
@@ -155,6 +160,7 @@ const UserPostPopup = ({ open, onOpenChange, post }) => {
                     </button>
                     <button
                       onClick={handleDeleteClick}
+                      tabIndex="-1"
                       disabled={isDeleting}
                       className="p-1 hover:bg-gray-100 rounded-full transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                       aria-label="Delete post"
@@ -168,6 +174,7 @@ const UserPostPopup = ({ open, onOpenChange, post }) => {
                         e.stopPropagation();
                         handleLikeToggle();
                       }}
+                      tabIndex="-1"
                       disabled={isLikeLoading}
                       className="flex items-center gap-1 text-sm"
                       aria-label={isLiked ? 'Unlike post' : 'Like post'}
@@ -200,6 +207,7 @@ const UserPostPopup = ({ open, onOpenChange, post }) => {
           <DialogFooter className="space-x-3 pt-2">
             <Button
               variant="outline"
+              tabIndex="-1"
               onClick={() => setShowDeleteConfirm(false)}
               className="bg-secondary text-white hover:bg-secondary-hover transition-colors duration-200 cursor-pointer"
             >
@@ -207,6 +215,7 @@ const UserPostPopup = ({ open, onOpenChange, post }) => {
             </Button>
             <Button
               variant="destructive"
+              tabIndex="-1"
               onClick={handleDeleteConfirm}
               disabled={isDeleting}
               className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-lg shadow-red-500/25 hover:shadow-red-500/40 transition-all duration-200 cursor-pointer"
