@@ -38,7 +38,7 @@ const UserProfilePage = () => {
             <img
               src={userData?.profilePic}
               alt="Profile"
-              className="w-8 h-8 lg:w-16 lg:h-16 rounded-full cursor-pointer p-0.5"
+              className="w-8 h-8 lg:w-16 lg:h-16 rounded-full aspect-square object-cover cursor-pointer p-0.5"
               onClick={() => setMenuOpen((open) => !open)}
             />
           </div>
