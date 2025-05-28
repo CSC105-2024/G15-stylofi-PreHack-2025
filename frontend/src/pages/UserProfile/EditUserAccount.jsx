@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDataContext } from '@/hooks/useDataContext';
 import FormField from '@/components/FormField';
@@ -8,18 +8,43 @@ import api from '@/services/api';
 import toast from 'react-hot-toast';
 import { clearAuthData } from '@/services/auth';
 import { useFetch } from '@/hooks/useFetch';
+import { Loader2 } from 'lucide-react';
 
 const EditUserAccount = () => {
-  const { userData, setUserData } = useDataContext();
+  const { userData, setUserData, reloadUserData } = useDataContext();
   const { fetchUserData } = useFetch();
-  const [username, setUsername] = useState(userData?.username || '');
+  const [username, setUsername] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [profilePic, setProfilePic] = useState(userData?.profilePic || '');
-  const [previewPic, setPreviewPic] = useState(userData?.profilePic || '');
+  const [profilePic, setProfilePic] = useState(null);
+  const [previewPic, setPreviewPic] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(!userData);
   const fileInputRef = useRef();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userData) {
+      setUsername(userData.username || '');
+      setProfilePic(userData.profilePic);
+      setPreviewPic(userData.profilePic);
+      setInitialLoading(false);
+    } else {
+      const loadUserData = async () => {
+        try {
+          await reloadUserData();
+        } catch (error) {
+          console.error('Failed to load user data:', error);
+          toast.error('Failed to load profile data');
+          navigate('/profile');
+        } finally {
+          setInitialLoading(false);
+        }
+      };
+
+      loadUserData();
+    }
+  }, [userData, reloadUserData, navigate]);
 
   const handlePicChange = (e) => {
     const file = e.target.files[0];
@@ -75,6 +100,15 @@ const EditUserAccount = () => {
       setLoading(false);
     }
   };
+
+  if (initialLoading) {
+    return (
+      <div className="flex flex-col min-h-screen bg-white items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <p className="mt-2 text-gray-500">Loading profile data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-white">

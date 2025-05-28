@@ -57,7 +57,7 @@ const UserProfilePage = () => {
         </div>
       </div>
       <div className="max-w-6xl mx-auto py-8">
-        <div className="flex items-center justify-between gap-2 mb-6">
+        <div className="flex items-center justify-between gap-2 mx-2 mb-6">
           <h1 className="text-3xl font-bold">My StyIdeas</h1>
           <h1 className="text-3xl font-bold">{userData?.username}</h1>
         </div>
