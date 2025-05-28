@@ -84,7 +84,7 @@ const resendOtp = async (email: string) => {
 const createUser = async (
   username: string,
   email: string,
-  password: string,
+  password: string
 ) => {
   const hashedPassword = await hash(password, 10);
   const user = await db.user.create({
@@ -99,20 +99,33 @@ const createUser = async (
 
 const updateUser = async (
   userId: string,
-  userName: string,
-  password: string,
+  data: { username?: string; profilePic?: string; password?: string }
 ) => {
-  const hashedPassword = await hash(password, 10);
+  const updateData: any = {};
 
-  const updatedUser = await db.user.update({
+  if (data.username) {
+    updateData.username = data.username;
+  }
+
+  if (data.profilePic) {
+    updateData.profilePic = data.profilePic;
+  }
+
+  if (data.password) {
+    updateData.password = await hash(data.password, 10);
+  }
+
+  const user = await db.user.update({
     where: { id: userId },
-    data: {
-      username: userName,
-      password: hashedPassword,
+    data: updateData,
+    select: {
+      username: true,
+      profilePic: true,
+      password: true,
     },
   });
 
-  return updatedUser;
+  return user;
 };
 
 export {
