@@ -52,14 +52,14 @@ const getOrCreateTagIds = async (labels: string[]) => {
         create: { name: label },
       });
       return tag.id;
-    })
+    }),
   );
   return tagIds;
 };
 
 const updatePost = async (
   id: string,
-  data: { title?: string; description?: string }
+  data: { title?: string; description?: string },
 ) => {
   const post = await db.post.update({
     where: { id },

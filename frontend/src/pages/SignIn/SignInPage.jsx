@@ -10,13 +10,11 @@ import PasswordInput from '@/components/PasswordInput';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { storeAuthToken } from '@/services/auth';
-
-// Add this import
 import { useDataContext } from '@/hooks/useDataContext';
 
 const SignInPage = () => {
   const navigate = useNavigate();
-  const { reloadUserData } = useDataContext(); // Get the reload function
+  const { reloadUserData } = useDataContext();
 
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +42,6 @@ const SignInPage = () => {
       if (res.data.success) {
         if (res.data.token) {
           storeAuthToken(res.data.token);
-          // Add this line to reload user data after login
           await reloadUserData();
         }
 

@@ -1,8 +1,7 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDataContext } from '@/hooks/useDataContext';
 import FormField from '@/components/FormField';
-import PasswordInput from '@/components/PasswordInput';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import api from '@/services/api';
@@ -54,7 +53,7 @@ const EditUserAccount = () => {
 
       if (res.data.success) {
         const updated = await fetchUserData();
-        // setUserData(updated.data);
+        setUserData(updated.data);
         toast.success('Profile updated!');
 
         if (oldPassword && newPassword) {

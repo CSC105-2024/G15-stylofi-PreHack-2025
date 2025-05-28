@@ -10,22 +10,18 @@ export const DataContextProvider = ({ children }) => {
   const [selectedTag, setSelectedTag] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Add this function to reload user data
   const reloadUserData = async () => {
     const res = await fetchUserData();
     setUserData(res.data);
   };
 
   useEffect(() => {
-    // Check for auth timestamp changes
     const handleStorageChange = () => {
       reloadUserData();
     };
 
-    // Initial load
     reloadUserData();
 
-    // Listen for storage events (auth changes)
     window.addEventListener('storage', handleStorageChange);
 
     return () => {
@@ -61,7 +57,7 @@ export const DataContextProvider = ({ children }) => {
         searchQuery,
         setSearchQuery,
         filteredData,
-        reloadUserData, // Export this function so it can be called after login
+        reloadUserData,
       }}
     >
       {children}
