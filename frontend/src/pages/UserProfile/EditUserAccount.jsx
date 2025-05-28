@@ -88,7 +88,7 @@ const EditUserAccount = () => {
             <img
               src={previewPic || '/default-avatar.png'}
               alt="Profile Preview"
-              className="w-16 h-16 rounded-full object-cover mb-2 border-2 border-gray-200"
+              className="w-36 h-36 rounded-full object-cover mb-2 border-2 border-gray-200"
               onClick={() => fileInputRef.current.click()}
               style={{ cursor: 'pointer' }}
             />
