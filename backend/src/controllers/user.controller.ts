@@ -222,7 +222,8 @@ const updateProfile = async (c: Context) => {
 
     const formData = await c.req.formData();
     const username = formData.get("username") as string;
-    const password = formData.get("newPassword") as string;
+    const oldPassword = formData.get("oldPassword") as string;
+    const newPassword = formData.get("newPassword") as string;
     const profilePic = formData.get("profilePic") as File;
 
     const updateData: any = {};
@@ -235,15 +236,18 @@ const updateProfile = async (c: Context) => {
       updateData.username = username;
     }
 
-    if (password) {
-      const isValid = await userModel.validatePassword(password, user.password);
+    if (oldPassword) {
+      const isValid = await userModel.validatePassword(
+        oldPassword,
+        user.password
+      );
       if (!isValid) {
         return c.json(
           { success: false, data: null, msg: "Invalid credentials" },
           401
         );
       }
-      updateData.password = password;
+      updateData.password = newPassword;
     }
 
     if (profilePic instanceof File) {

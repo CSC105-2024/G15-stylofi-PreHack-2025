@@ -8,7 +8,7 @@ import api from '@/services/api';
 import toast from 'react-hot-toast';
 import { clearAuthData } from '@/services/auth';
 import { useFetch } from '@/hooks/useFetch';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
 
 const EditUserAccount = () => {
   const { userData, setUserData, reloadUserData } = useDataContext();
@@ -16,6 +16,8 @@ const EditUserAccount = () => {
   const [username, setUsername] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [profilePic, setProfilePic] = useState(null);
   const [previewPic, setPreviewPic] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -144,20 +146,38 @@ const EditUserAccount = () => {
             placeholder="Username"
             required
           />
-          <Input
-            type="password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            placeholder="Old Password"
-            className="bg-input-background w-80 h-12 border-0 rounded-xl ring-primary selection:text-white"
-          />
-          <Input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="New Password"
-            className="bg-input-background w-80 h-12 border-0 rounded-xl ring-primary selection:text-white"
-          />
+          <div className="relative w-80">
+            <Input
+              type={showOldPassword ? 'text' : 'password'}
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              placeholder="Old Password"
+              className="bg-input-background w-full h-12 border-0 rounded-xl ring-primary selection:text-white pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowOldPassword(!showOldPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            >
+              {showOldPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+          <div className="relative w-80">
+            <Input
+              type={showNewPassword ? 'text' : 'password'}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="New Password"
+              className="bg-input-background w-full h-12 border-0 rounded-xl ring-primary selection:text-white pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            >
+              {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
           <div className="flex gap-4 mt-2 w-full justify-center">
             <Button
               type="button"
