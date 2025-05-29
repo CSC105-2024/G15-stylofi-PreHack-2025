@@ -2,6 +2,23 @@
 
 A fashion-focused social platform similar to Pinterest, where users can discover, share, and organize fashion inspiration. Stylofi leverages Google Cloud Vision API to automatically validate and categorize fashion-related content, ensuring a curated experience for fashion enthusiasts.
 
+## :camera: Screenshots
+
+### Fashion Feed
+
+![Fashion Feed](./screenshots/home-feed.png)
+_Discover and browse curated fashion content_
+
+### Post Creation with AI Validation
+
+![Create Post](./screenshots/create-post.png)
+_Upload fashion images with automatic validation using Google Cloud Vision API_
+
+### User Profile
+
+![User Profile](./screenshots/user-profile.png)
+_Organize your fashion inspiration and manage your posts_
+
 ## :rocket: Getting Started
 
 Clone the repository:
