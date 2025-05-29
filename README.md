@@ -18,7 +18,7 @@ cd G15-stylofi-PreHack-2025
 - React
 - Axios
 - React Router DOM
-- Tailwind CSS / Bootstrap / styled-components (choose one)
+- Tailwind CSS, shadcn/ui
 - Other dependencies...
 
 ### :rocket: Getting Started - React Client
